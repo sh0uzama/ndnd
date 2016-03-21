@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" ng-app="ndnd" ng-cloak>
+    
+<head>
+  
+  <meta charset="UTF-8">
+  <title>ndnd</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- FONTS -->
+  <for each="font in data.fonts">
+    <link rel="stylesheet" media="all" href="$font">
+  </for>
+  
+  <!-- CSS -->
+  <for each="style in data.styles">
+    <link rel="stylesheet" media="all" href="$style">
+  </for>
+  <link rel="stylesheet" media="all" href="client/application.css">
+  
+  <!-- SCRIPTS -->
+  <for each="script in data.scripts">
+    <script src="$script"></script>
+  </for>
+  <script src="client/application.js"></script>
+
+</head>
+
+<body layout="row" ui-view></body>
+
+</html>

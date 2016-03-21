@@ -1,0 +1,32 @@
+[
+  {
+    "id": "might",
+    "name": "Might",
+    "description": "Your [Weapon] and [Spell] power is increased by 5.\nIf you have {effect:weakened:Weakened} when you gain Might, you remove Weakened instead of gaining Might."
+  },
+  {
+    "id": "regeneration",
+    "name": "Regeneration",
+    "description": "You restore 1 Wound at the end of your turn."
+  },
+  {
+    "id": "protection",
+    "name": "Protection",
+    "description": "All direct damage you suffer is decreased by 5.\nIf you have {effect:vulnerability:Vulnerability} when you gain Protection, you remove Vulnerability instead of gaining Protection."
+  },
+  {
+    "id": "stability",
+    "name": "Stability",
+    "description": "If you are {effect:stunned}, you immediately remove this status. If you are {effect:prone}, you immediately get back on your feet.\nYou cannot be stunned, knocked prone, pushed, pulled or slid (unless you want to)."
+  },
+  {
+    "id": "vigor",
+    "name": "Vigor",
+    "description": "Removes the {effect:crippled:Crippled} and {effect:chilled:Chilled} conditions.\nYour Movement Speed and Avoidance are increased by 1, and you have advantage on {power:parry:Parry} and {power:dodge:Dodge} rolls."
+  },
+  {
+    "id": "resistance",
+    "name": "Resistance",
+    "description": "Removes the {effect:burning:Burning} and {effect:bleeding:Bleeding} condition.\nBurning and Bleeding conditions cannot be applied to you."
+  }
+]

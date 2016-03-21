@@ -1,0 +1,42 @@
+<md-card class="power-card" ng-class="{'expanded':power.expanded}" ng-repeat="power in ctrl.hero.powers">
+  <md-card-header class="power-card-header" ng-click="power.expanded = !power.expanded" md-ink-ripple layout="row">
+    <md-card-avatar>
+      <img ng-src="client/icons/{{power.icon}}.svg" />
+    </md-card-avatar>
+    <md-card-header-text flex>
+      <span class="md-title">{{power.name}}</span>
+      <span class="md-subhead">{{power.action}} {{power.type ? '- ' + power.type : ''}}</span>
+    </md-card-header-text>
+    <div class="power-card-badge energy" ng-if="power.energy">{{power.energy}}</div>
+    <div class="power-card-badge upkeep" ng-if="power.upkeep">{{power.upkeep}}</div>
+  </md-card-header>
+  <md-card-content class="power-card-description" ng-if="power.expanded">
+    <div class="card-line">
+      <h5 class="card-line-title">Action</h5>
+      <p class="card-line-text">{{power.action}}</p>
+    </div>
+    <div class="card-line" ng-if="power.type">
+      <h5 class="card-line-title">Type</h5>
+      <p class="card-line-text">{{power.type}}</p>
+    </div>
+    <div class="card-line" ng-if="power.requirements">
+      <h5 class="card-line-title">Requirements</h5>
+      <p class="card-line-text" compile="power.requirements"></p>
+    </div>
+    <div class="card-line" ng-if="power.target">
+      <h5 class="card-line-title">Target(s)</h5>
+      <p class="card-line-text">{{power.target}}</p>
+    </div>
+    <div class="card-full-text" compile="power.effect"></div>
+  </md-card-content>
+  <md-card-actions layout="row" layout-align="end center">
+    <md-button class="md-icon-button" aria-label="Use" ng-click="ctrl.usePower(power, $event)">
+      <md-icon>forward</md-icon>
+      <md-tooltip>Use this Power</md-tooltip>
+    </md-button>
+    <md-button class="md-icon-button" aria-label="Delete" ng-click="ctrl.removePower(power, $event)">
+      <md-icon>delete</md-icon>
+      <md-tooltip>Delete this Power</md-tooltip>
+    </md-button>
+  </md-card-actions>
+</md-card>

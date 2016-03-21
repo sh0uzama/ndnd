@@ -1,0 +1,121 @@
+[{
+  "id": "battle-shout",
+  "name": "Battle Shout",
+  "action": "Standard",
+  "type": "Shout",
+  "requirements": 0,
+  "energy": 2,
+  "upkeep": 0,
+  "target": "You and all allies within 2 squares from you",
+  "effect": "The target(s) gains {effect:might:Might} and {effect:vigor:Vigor}.\nSPECIAL - You can take another Action before or after this one."
+}, {
+  "id": "devastate",
+  "name": "Devastate",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Two-Handed Melee Weapon",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon]+5 damage.\nDAMAGE - Applies {effect:vulnerability:Vulnerability}."
+}, {
+  "id": "execute",
+  "name": "Execute",
+  "action": "Quick / Standard",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon\nTarget must be {effect:injured:Injured}",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon] damage.\nDAMAGE - If you succeed in a Strength roll vs the target's Toughness roll, the target is immediately Dying. Using a two-handed weapon grants you a +2 bonus to your roll."
+}, {
+  "id": "hamstring",
+  "name": "Hamstring",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon] damage.\nDAMAGE - Inflicts {effect:crippled:Crippled}.\nSPECIAL - Hamstring can be used as a {power:melee-basic-attack:Melee Basic Attack}."
+}, {
+  "id": "knockdown-blow",
+  "name": "Knockdown Blow",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Heavy or Two-Handed Melee Weapon",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon]+5 damage.\nDAMAGE - The target is knocked {effect:prone}."
+}, {
+  "id": "overpower",
+  "name": "Overpower",
+  "action": "Quick (Trigger)",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon\nTrigger: Your Melee Attack misses, or is dodged, blocked or parried",
+  "energy": 0,
+  "upkeep": 0,
+  "target": "The triggering creature",
+  "effect": "HIT - [Weapon] damage.\nSPECIAL - Block, Dodge and Parry abilities cannot be used against Overpower."
+}, {
+  "id": "revenge",
+  "name": "Revenge",
+  "action": "Quick (Trigger)",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon\nTrigger: You are hit by a Melee Attack",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "The creature attacking you(if in your weapon range)",
+  "effect": "Revenge can be used after the triggering attack is resolved.HIT - [Weapon] damage. You inflict 1 additional damage for each Wound you suffered with the triggering attack.SPECIAL - If the target is at 0 wounds or less after this attack, you can spend an Endurance point to recover an amount of Wounds equal to your Injured value."
+}, {
+  "id": "shield-bash",
+  "name": "Shield Bash",
+  "action": "Quick / Standard",
+  "type": "Melee Attack",
+  "requirements": "Shield",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature adjacent to you",
+  "effect": "HIT - Roll your shield [Block]+10 damage.\nDAMAGE - The target is {effect:stunned:Stunned} until the end of its next round. If you succeed in a Strength roll vs the target's Mass, the target is also knocked prone."
+}, {
+  "id": "stalwart-shout",
+  "name": "Stalwart Shout",
+  "action": "Standard",
+  "type": "Shout",
+  "requirements": 0,
+  "energy": 2,
+  "upkeep": 0,
+  "target": "You and all allies within 2 squares from you",
+  "effect": "The target(s) gains {effect:stability:Stability} and {effect:resistance:Resistance}.\nSPECIAL - You can take another Action before or after this one."
+}, {
+  "id": "sword-and-board",
+  "name": "Sword and Board",
+  "action": "Quick (Trigger)",
+  "type": "Block",
+  "requirements": "Shield + Melee Weapon\nTrigger: You (or an ally adjacent to you) are hit by a Melee Attack",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "You",
+  "effect": "Roll your shield [Block]: the triggering attack damage is reduced by this amount.\nAfter the triggering attack is resolved, you can make a {power:melee-basic-attack:Melee Basic Attack} as a Free Action against the attacker (if in your weapon range).\nYou can also trigger Sword and Board also when an ally adjacent to you is hit by a Melee Attack."
+}, {
+  "id": "threatening-strike",
+  "name": "Threatening Strike",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon",
+  "energy": 1,
+  "upkeep": 0,
+  "target": 0,
+  "effect": "HIT - [Weapon]+5 damage, and you may immediately {power:swap:Swap} as a Free Action.\nDAMAGE - The target is {effect:threatened:Threatened} until the start of your next turn."
+}, {
+  "id": "whirlwind",
+  "name": "Whirlwind",
+  "action": "Standard",
+  "type": "Melee Area Attack",
+  "requirements": "Two-Handed Melee Weapon",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "All creatures in your melee range",
+  "effect": "SPECIAL - You can {power:disengage:Disengage} before or after Whirlwind.\nHIT - [Weapon] damage."
+}]

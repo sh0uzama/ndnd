@@ -1,0 +1,121 @@
+[{
+  "id": "blink",
+  "name": "Blink",
+  "action": "Quick (Trigger)",
+  "type": "Spell Dodge",
+  "requirements": "Any Attunement\nTrigger: You are hit by an Attack or a Spell",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "You",
+  "effect": "Make a Willpower roll. If your roll is higher than the attack roll that hit you, you dodge the attack - the attack misses you.\nIf you dodge, you can immediately move 1+WIL squares - this movement does not provoke Opportunity Attacks, and you can cross squares occupied by enemies (but you cannot end your movement there)."
+}, {
+  "id": "blurred-step",
+  "name": "Blurred Step",
+  "action": "Standard",
+  "type": "Spell",
+  "requirements": "Any Attunement",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "You",
+  "effect": "You can move 2+WIL squares - this movement does not provoke Opportunity Attacks, and you can cross squares occupied by enemies (but you cannot end your movement there).\nAt the end of the movement, you gain Vigor."
+}, {
+  "id": "crystal-prison",
+  "name": "Crystal Prison",
+  "action": "Standard",
+  "type": "Spell Attack",
+  "requirements": "Frost Attunement",
+  "energy": 2,
+  "upkeep": 2,
+  "target": "One creature in range 6",
+  "effect": "HIT - Make an opposed Willpower roll against the target. If your roll is higher, until you mantain the upkeep, the target can't perform any actions during its turn.\nIf the target is attacked and/or damaged, the spell breaks and you recover your upkeep."
+}, {
+  "id": "elemental-bolt",
+  "name": "Elemental Bolt",
+  "action": "Standard",
+  "type": "Spell",
+  "requirements": "Fire or Frost Attunement",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in range 6",
+  "effect": "HIT - [Spell] Fire or Frost damage (according to your attunement).\nDAMAGE - According to your attunement: Fire: Inflicts Burning, Frost: Inflicts Crippled."
+}, {
+  "id": "elemental-weapon",
+  "name": "Elemental Weapon",
+  "action": "Standard",
+  "type": "Spell",
+  "requirements": "Fire or Frost Attunement",
+  "energy": 2,
+  "upkeep": 2,
+  "target": "You",
+  "effect": "Your Melee Weapon becomes infused with Fire or Frost energy (according to your attunement).\nWhenever you make a Melee Attack with the infused weapon, on damage you also inflict Burning (Fire) or Crippled (Frost)."
+}, {
+  "id": "elemental-barrier",
+  "name": "Elemental Barrier",
+  "action": "Standard",
+  "type": "Spell",
+  "requirements": "Fire or Frost Attunement",
+  "energy": 2,
+  "upkeep": 2,
+  "target": "You",
+  "effect": "Whenever you are hit by a Melee Attack, the attacker is Crippled (Frost) or is Burning (Fire).\nIn addition, if you are not wearing any armor, your Armor is increased by 2."
+}, {
+  "id": "ethereal-armor",
+  "name": "Ethereal Armor",
+  "action": "Standard",
+  "type": "Spell",
+  "requirements": "Any Attunement",
+  "energy": 1,
+  "upkeep": 1,
+  "target": "You",
+  "effect": "When you cast Ethereal Armor, put 6 tokens on it. When you lose a Wound, you remove a token instead.\nWhen the last token is removed, the  make a WIL roll against the MASS of all creatures adjacent to you. On success, the creature is pushed WIL squares."
+}, {
+  "id": "fireball",
+  "name": "Fireball",
+  "action": "Standard",
+  "type": "Spell Area Attack",
+  "requirements": "Fire Attunement",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "Creatures in a 3x3 area centered on a square in range 6",
+  "effect": "HIT - [Spell] Fire damage.\nDAMAGE - The target is Burning."
+}, {
+  "id": "frost-shock",
+  "name": "Frost Shock",
+  "action": "Quick / Standard",
+  "type": "Spell Area Attack",
+  "requirements": "Frost Attunement",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature in range 6",
+  "effect": "HIT - [Spell] Frost damage.\nDAMAGE - Inflicts Crippled, and the target is Stunned."
+}, {
+  "id": "ice-blast",
+  "name": "Ice Blast",
+  "action": "Standard",
+  "type": "Spell Area Attack",
+  "requirements": "Frost Attunement",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "Creatures in a 3x3 area adjacent to you",
+  "effect": "HIT - [Spell] Frost damage.\nDAMAGE - Inflicts Crippled."
+}, {
+  "id": "incinerate",
+  "name": "Incinerate",
+  "action": "Quick / Standard",
+  "type": "Spell Attack",
+  "requirements": "Fire AttunementThe target must be Burning",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature in range 6",
+  "effect": "HIT - [Spell] Fire damage.\nDAMAGE - If the target is Injured after the inflicted damage, make a Willpower roll vs target's Toughness roll - if you win, the target is immediately Dying."
+}, {
+  "id": "purifying-flames",
+  "name": "Purifying Flames",
+  "action": "Standard",
+  "type": "Spell Attack",
+  "requirements": "Fire AttunementThe target must be Burning",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in range 6",
+  "effect": "HIT - [Spell] Fire damage, and you gain Regeneration. If you cast this spell in double attunement, you can spend all your remaining energy and recover the same amount of Wounds."
+}]

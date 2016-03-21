@@ -1,0 +1,32 @@
+[
+  {
+    "id": "weakened",
+    "name": "Weakened",
+    "description": "All your [Weapon] and [Spell] power is decreased by 5.\nIf you have {effect:might:Might} when you gain Weakened, you remove Might instead of gaining Weakened."
+  },
+  {
+    "id": "burning",
+    "name": "Burning",
+    "description": "You lose 2 Wounds (fire) at the start of the turn of the creature that inflicted Burn."
+  },
+  {
+    "id": "bleeding",
+    "name": "Bleeding",
+    "description": "If you (willingly) move during your turn, you immediately lose 1 Wound (blood loss).\nYou lose 1 Wound (blood loss) at the start of the turn of the creature that inflicted Bleeding."
+  },
+  {
+    "id": "vulnerability",
+    "name": "Vulnerability",
+    "description": "All direct damage you suffer is increased by 5.\nIf you have {effect:protection:Protection} when you gain Vulnerability, you remove Protection instead of gaining Vulnerability."
+  },
+  {
+    "id": "crippled",
+    "name": "Crippled",
+    "description": "If your Movement is higher than 2, it becomes 2. You cannot {power:disengage:Disengage}."
+  },
+  {
+    "id": "chilled",
+    "name": "Chilled",
+    "description": "If your Movement is higher than 2, it becomes 2. You cannot {power:disengage:Disengage}.\nYou cannot use Quick actions (you can use Quick actions as Standard actions if you want) or make Opportunity Attacks."
+  }
+]

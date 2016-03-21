@@ -1,0 +1,23 @@
+<div layout="row">
+  <div class="hint-line" flex>
+    <h5 class="hint-line-title">Action</h5>
+    <p class="hint-line-text">{{ctrl.hintObj.action}}</p>
+  </div>
+</div>
+<div class="hint-line" ng-if="ctrl.hintObj.energy">
+  <h5 class="hint-line-title">Energy (Upkeep)</h5>
+  <p class="hint-line-text">{{ctrl.hintObj.energy}} {{ctrl.hintObj.upkeep ? '(' + ctrl.hintObj.upkeep + ')', ''}}</p>
+</div>
+<div class="hint-line" ng-if="ctrl.hintObj.type">
+  <h5 class="hint-line-title">Type</h5>
+  <p class="hint-line-text">{{ctrl.hintObj.type}}</p>
+</div>
+<div class="hint-line" ng-if="ctrl.hintObj.requirements">
+  <h5 class="hint-line-title">Requirements</h5>
+  <p class="hint-line-text" compile="ctrl.hintObj.requirements"></p>
+</div>
+<div class="hint-line" ng-if="ctrl.hintObj.target">
+  <h5 class="hint-line-title">Target(s)</h5>
+  <p class="hint-line-text">{{ctrl.hintObj.target}}</p>
+</div>
+<div class="hint-full-text" compile="ctrl.hintObj.effect"></div>

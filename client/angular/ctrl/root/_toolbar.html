@@ -1,0 +1,31 @@
+<!--<md-button class="menu" hide-gt-sm ng-click="ctrl.toggleSidenav('left')"><md-icon>menu</md-icon></md-button>-->
+<div flex layout="row">
+  <span flex></span>
+  <div class="toolbar-info" layout="row" layout-align="center center" ng-if="ctrl.hero.inTurn">
+    <md-icon>play_arrow</md-icon>
+    <md-tooltip>It's your Turn!</md-tooltip>
+  </div>
+  <div class="toolbar-info" layout="row" layout-align="center center" ng-if="!ctrl.hero.inTurn">
+    <md-icon>stop</md-icon>
+    <md-tooltip>Not your Turn</md-tooltip>
+  </div>
+  <div class="toolbar-info" layout="row" layout-align="center center" ng-if="ctrl.hero.hasInstant">
+    <md-icon>flash_on</md-icon>
+    <md-tooltip>Quick Action available</md-tooltip>
+  </div>
+  <div class="toolbar-info" layout="row" layout-align="center center" ng-if="!ctrl.hero.hasInstant">
+    <md-icon>flash_off</md-icon>
+    <md-tooltip>Quick Action not available</md-tooltip>
+  </div>
+  <div layout="row" layout-align="center center" class="toolbar-info">
+    <span>{{ctrl.hero.energy}}</span>
+    <md-icon>star</md-icon>
+    <md-tooltip>Energy</md-tooltip>
+  </div>
+  <div layout="row" layout-align="center center" class="toolbar-info">
+    <span>{{ctrl.hero.wounds}}</span>
+    <md-icon ng-if="ctrl.hero.wounds > 0">favorite</md-icon>
+    <md-icon ng-if="ctrl.hero.wounds <= 0">error_outline</md-icon>
+    <md-tooltip>Wounds</md-tooltip>
+  </div>
+</div>

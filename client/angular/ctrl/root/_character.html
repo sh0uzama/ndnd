@@ -1,0 +1,45 @@
+<div layout="row" layout-align="space-around center">
+  <md-button class="md-fab md-primary" ng-click="ctrl.changeWounds(-1)">
+    <md-icon>remove</md-icon>
+  </md-button>
+  <div class="sheet-hero-wounds">{{ctrl.hero.wounds}}</div>
+  <md-button class="md-fab md-primary" ng-click="ctrl.changeWounds(1)">
+    <md-icon>add</md-icon>
+  </md-button>
+  <md-button class="md-fab md-primary" ng-click="ctrl.switchTurn()">
+    <md-icon ng-if="!ctrl.hero.inTurn">play_arrow</md-icon>
+    <md-icon ng-if="ctrl.hero.inTurn">stop</md-icon>
+  </md-button>
+</div>
+<div layout="row" layout-align="space-around center">
+  <md-button class="md-fab md-primary" ng-click="ctrl.changeEnergy(-1)">
+    <md-icon>remove</md-icon>
+  </md-button>
+  <div class="sheet-hero-energy">{{ctrl.hero.energy}}</div>
+  <md-button class="md-fab md-primary" ng-click="ctrl.changeEnergy(1)">
+    <md-icon>add</md-icon>
+  </md-button>
+  <md-button class="md-fab md-primary" ng-click="ctrl.switchInstant()">
+    <md-icon ng-if="ctrl.hero.hasInstant">flash_on</md-icon>
+    <md-icon ng-if="!ctrl.hero.hasInstant">flash_off</md-icon>
+  </md-button>
+</div>
+<h3 class="character-section-title">Effects</h3>
+<div layout="row" layout-margin>
+  <div class="effect-icon" flex ng-repeat="boon in ctrl.effects.boons" ng-click="ctrl.changeEffect('boons', boon.id)">
+    <img ng-src="client/icons/effects/{{boon.id}}.svg" alt="{{boon.name}}" ng-class="{active:ctrl.hero.effects.boons[boon.id]}">
+    <div class="effect-icon-name">{{boon.name}}</div>
+  </div>
+</div>
+<div layout="row" layout-margin>
+  <div class="effect-icon" flex ng-repeat="condi in ctrl.effects.conditions" ng-click="ctrl.changeEffect('conditions', condi.id)">
+    <img ng-src="client/icons/effects/{{condi.id}}.svg" alt="{{condi.name}}" ng-class="{active:ctrl.hero.effects.conditions[condi.id]}">
+    <div class="effect-icon-name">{{condi.name}}</div>
+  </div>
+</div>
+<div layout="row" layout-margin>
+  <div class="effect-icon" flex ng-repeat="status in ctrl.effects.status" ng-click="ctrl.changeEffect('status', status.id)">
+    <img ng-src="client/icons/effects/{{status.id}}.svg" alt="{{status.name}}" ng-class="{active:ctrl.hero.effects.status[status.id]}">
+    <div class="effect-icon-name">{{status.name}}</div>
+  </div>
+</div>

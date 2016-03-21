@@ -1,0 +1,174 @@
+.abs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+body {
+  max-width: 800px;
+  margin: auto;
+}
+.vanishing-fab.visible {
+  transform: scale(1);
+  transition: transform 0.3s linear;
+}
+.vanishing-fab {
+  transform: scale(0);
+  transition: transform 0.3s linear;
+}
+.toolbar-info {
+  margin-right: 1em;
+}
+.power-card {
+  height: 72px;
+  position: relative;
+  overflow: hidden;
+}
+.power-card md-card-avatar {
+  margin-left: 0 !important;
+  outline: 0;
+}
+.power-card md-card-actions {
+  visibility: hidden;
+}
+.power-card .md-title {
+  font-weight: 600;
+}
+.power-card:hover {
+  background-color: #BBDEFB;
+}
+.power-card.selected {
+  background-color: #DCEDC8;
+}
+.power-card.expanded {
+  height: auto;
+}
+.power-card.expanded .md-title {
+  font-size: 20px;
+  line-height: 40px;
+}
+.power-card.expanded .md-subhead {
+  display: none;
+}
+.power-card.expanded md-card-actions {
+  visibility: visible;
+}
+.power-card .power-card-header {
+  outline: 0;
+}
+.power-card .power-card-badge {
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  text-align: center;
+}
+.power-card .power-card-badge.energy {
+  background-color: yellow;
+}
+.power-card .power-card-badge.upkeep {
+  background-color: blue;
+}
+.power-card .power-card-description .card-line {
+  margin-bottom: 5px;
+}
+.power-card .power-card-description .card-line .card-line-title {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.power-card .power-card-description .card-line .card-line-text {
+  margin: 0;
+  font-size: 14px;
+}
+.character-power-list .power-card:last-child {
+  margin-bottom: 100px;
+}
+.character-sheet .sheet-hero-wounds {
+  width: 90px;
+  height: 90px;
+  text-align: center;
+  line-height: 90px;
+  position: relative;
+  font-weight: 600;
+  font-size: 60px;
+}
+.character-sheet .sheet-hero-wounds::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  opacity: .2;
+  z-index: -1;
+  background: url("icons/chained-heart.svg") no-repeat;
+  background-size: contain;
+}
+.character-sheet .sheet-hero-energy {
+  width: 90px;
+  height: 90px;
+  text-align: center;
+  line-height: 90px;
+  position: relative;
+  font-weight: 600;
+  font-size: 60px;
+}
+.character-sheet .sheet-hero-energy::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  opacity: .2;
+  z-index: -1;
+  background: url("icons/round-star.svg") no-repeat;
+  background-size: contain;
+}
+.character-section-title {
+  text-align: center;
+  margin: 0.5em;
+}
+.effect-icon {
+  outline: 0;
+}
+.effect-icon img {
+  opacity: 0.2;
+}
+.effect-icon img.active {
+  opacity: 1;
+}
+.effect-icon .effect-icon-name {
+  font-size: 8px;
+  text-align: center;
+}
+.dialog-hint .hint-icon {
+  padding: 5px;
+  background-color: white;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+.dialog-hint .hint-icon md-icon {
+  color: black;
+}
+.dialog-hint .dialog-hint-content {
+  position: relative;
+  padding: 16px;
+}
+.dialog-hint .dialog-hint-content .hint-line {
+  margin-bottom: 5px;
+}
+.dialog-hint .dialog-hint-content .hint-line .hint-line-title {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.dialog-hint .dialog-hint-content .hint-line .hint-line-text {
+  margin: 0;
+  font-size: 14px;
+}
+.character-stats {
+  padding: 8px;
+}

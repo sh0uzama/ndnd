@@ -1,0 +1,14 @@
+<md-input-container class="md-block">
+  <label>Name</label>
+  <input ng-model="ctrl.hero.name" type="text" required>
+</md-input-container>
+
+<div layout="row" layout-wrap>
+
+  <md-input-container class="md-icon-float md-block" ng-repeat="(key, value) in ctrl.hero.stats track by key" flex="50">
+    <label>{{ctrl.dictionary[key]}}</label>
+    <md-icon>favorite</md-icon>
+    <input ng-model="ctrl.hero.stats[key]" type="number" step="1" required min="0">
+  </md-input-container>
+
+</div>

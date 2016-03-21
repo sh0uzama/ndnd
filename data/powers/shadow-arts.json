@@ -1,0 +1,121 @@
+[{
+  "id": "backstab",
+  "name": "Backstab",
+  "action": "Quick / Standard",
+  "type": "Melee Attack",
+  "requirements": "Light Melee Weapon\nAdvantage on the Target",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon]+10 damage. You inflict 1 additional damage for each Wound the target is currently missing (with a maximum of 15)."
+}, {
+  "id": "cheap-shot",
+  "name": "Cheap Shot",
+  "action": "Quick / Standard",
+  "type": "Melee Attack",
+  "requirements": "Light Melee Weapon",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - Inflicts Bleeding, and the target is Stunned until the end of its next turn."
+}, {
+  "id": "cloak-and-dagger",
+  "name": "Cloak and Dagger",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon] damage, and you gain Shroud.\nSPECIAL - You can Disengage before or after the attack."
+}, {
+  "id": "debilitating-strike",
+  "name": "Debilitating Strike",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon]+5 damage.\nSPECIAL - The target loses all of its Boons, and is Weakened until the end of its next turn."
+}, {
+  "id": "hidden-strike",
+  "name": "Hidden Stride",
+  "action": "Standard",
+  "type": "Physical",
+  "requirements": "Light Armor or No Armor",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "You",
+  "effect": "You gain Shroud, and you can Disengage then Move (or vice-versa)."
+}, {
+  "id": "mutilate",
+  "name": "Mutilate",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon]+5 damage.\nDAMAGE - The target is Bleeding and Crippled."
+}, {
+  "id": "rending-whirl",
+  "name": "Rending Whirl",
+  "action": "Standard",
+  "type": "Melee Area Attack",
+  "requirements": "Melee Weapon",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "All creatures in your melee range",
+  "effect": "HIT - [Weapon] damage.\nDAMAGE - The target is Bleeding."
+}, {
+  "id": "shadow-shot",
+  "name": "Shadow Shot",
+  "action": "Standard",
+  "type": "Ranged Attack",
+  "requirements": "Longbow or Shortbow",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in range 4",
+  "effect": "HIT - [Weapon] damage, you gain Shroud and you can immediately Swap.\nDAMAGE - You can move 4 squares to a square adjacent to the target, without provoking Opportunity Attacks. You MUST be able to reach the target to initiate the movement."
+}, {
+  "id": "sneak-attack",
+  "name": "Sneak Attack",
+  "action": "Standard",
+  "type": "Melee Attack",
+  "requirements": "Melee Weapon\nAdvantage on the Target",
+  "energy": 0,
+  "upkeep": 0,
+  "target": "One creature in your weapon range",
+  "effect": "HIT - [Weapon]+10 damage."
+}, {
+  "id": "sniper-shot",
+  "name": "Sniper Shot",
+  "action": "Standard",
+  "type": "Ranged Attack",
+  "requirements": "Longbow or Shortbow",
+  "energy": 2,
+  "upkeep": 0,
+  "target": "A creature you can see",
+  "effect": "SPECIAL - As long as you can see the target, you can attack it - you ignore any Disadvantage when making this attack.\nHIT - [Weapon]+15 damage. If you are Shrouded, you deal 10 additional damage."
+}, {
+  "id": "trick-shot",
+  "name": "Trick Shot",
+  "action": "Standard",
+  "type": "Ranged Attack",
+  "requirements": "Longbow or Shortbow",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "One creature in range 4",
+  "effect": "HIT - [Weapon] damage, and you can bounce Trick Shot to a different creature that you can see within 2 squares of the original target. Repeat a Trick Shot attack against that secondary target."
+}, {
+  "id": "tumble",
+  "name": "Tumble",
+  "action": "Quick (Trigger)",
+  "type": "Dodge",
+  "requirements": "Light Armor or No Armor\nTrigger: You are hit by an Attack or a Spell",
+  "energy": 1,
+  "upkeep": 0,
+  "target": "You",
+  "effect": "Make an Agility roll. If your roll is higher than the attack roll that hit you, you dodge the attack - the attack misses you.\nIf you successfully dodged, you can immediately move 1+AGI squares (without provoking Opportunity Attacks).\nIf you didn't dodge the attack, you can move move 1+AGI squares (without provoking Opportunity Attacks) but only after the triggering attack is resolved."
+}]

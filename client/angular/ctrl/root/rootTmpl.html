@@ -1,0 +1,62 @@
+<!--
+<md-sidenav md-component-id="left" aria-label="Open Main Menu" md-is-locked-open="$mdMedia('gt-sm')">
+
+    <md-toolbar class="md-whiteframe-z1">
+        <h3>sidebar</h3>
+    </md-toolbar>
+
+</md-sidenav>
+-->
+
+<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
+
+  <md-toolbar layout="row" class="md-whiteframe-z1" ng-include="'client/angular/ctrl/root/_toolbar.html'">
+    <!--ng-include="'client/angular/ctrl/root/_toolbar.html'"-->
+  </md-toolbar>
+
+  <md-content layout="column" flex>
+
+    <md-button ng-if="selectedTab==1" class="md-fab md-mini md-fab-bottom-right" aria-label="Add New Power" ng-click="ctrl.chooseNewPowers()">
+      <md-icon>add</md-icon>
+    </md-button>
+
+    <md-tabs md-swipe-content="true" flex md-stretch-tabs md-border-bottom md-selected="selectedTab">
+      <md-tab>
+        <md-tab-label>
+          Character
+        </md-tab-label>
+        <md-tab-body>
+          <div class="character-sheet" ng-include="'client/angular/ctrl/root/_character.html'">
+            <!--ng-include="'client/angular/ctrl/root/_character.html'"-->
+          </div>
+        </md-tab-body>
+      </md-tab>
+      <md-tab>
+        <md-tab-label>
+          Powers
+        </md-tab-label>
+        <md-tab-body>
+          <div class="character-power-list" ng-include="'client/angular/ctrl/root/_powers.html'">
+            <!--ng-include="'client/angular/ctrl/root/_powers.html'"-->
+          </div>
+        </md-tab-body>
+      </md-tab>
+      <md-tab>
+        <md-tab-label>
+          Stats
+        </md-tab-label>
+        <md-tab-body>
+          <div class="character-stats" ng-include="'client/angular/ctrl/root/_stats.html'">
+            <!--ng-include="'client/angular/ctrl/root/_stats.html'"-->
+          </div>
+        </md-tab-body>
+      </md-tab>
+    </md-tabs>
+
+  </md-content>
+
+</div>
+
+<script type="text/ng-template" id="power-template">
+
+</script>
