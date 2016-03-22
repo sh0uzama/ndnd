@@ -89,117 +89,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   });
 })(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('effects', ['$http', '$q', function ($http, $q) {
-
-    var _allEffects;
-    var effects = {
-      all: {},
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function byId(id) {
-      return _allEffects.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/effects',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        _allEffects = [];
-        effects.all = result.data;
-        _allEffects = _allEffects.concat(effects.all.boons);
-        _allEffects = _allEffects.concat(effects.all.conditions);
-        _allEffects = _allEffects.concat(effects.all.status);
-
-        _allEffects.forEach(function (e) {
-          return e.icon = 'effects/' + e.id;
-        });
-
-        effects.list = _allEffects;
-
-        deferred.resolve(effects.all);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    effects.promise = initialize();
-
-    return effects;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  function chooseIcon(power) {
-
-    switch (power.source) {
-      case 'arms':
-        return 'battle-axe';
-      case 'elemental-magic':
-        return 'frostfire';
-      case 'shadow-arts':
-        return 'domino-mask';
-    }
-
-    return 'private';
-  }
-
-  ndnd.factory('powers', ['$http', '$q', function ($http, $q) {
-
-    var powers = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function byId(id) {
-      return powers.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/powers',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        powers.list = result.data;
-        powers.list.forEach(function (p) {
-          return p.icon = chooseIcon(p);
-        });
-
-        deferred.resolve(powers.list);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    powers.promise = initialize();
-
-    return powers;
-  }]);
-})(angular.module('ndnd'));
 /*globals angular LZString _*/
 (function (ndnd) {
 
@@ -260,7 +149,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   Hero.Deflate = function (source) {
     var deflated = angular.copy(source);
     deflated.effects = HeroEffects.Deflate(source.effects);
-    deflated.stats = HeroStats.Deflates(source.stats);
+    deflated.stats = HeroStats.Deflate(source.stats);
     deflated.powers = source.powers.filter(function (p) {
       return p.source !== 'base';
     }).map(function (p) {
@@ -437,6 +326,117 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return {
       dictionary: dictionary
     };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('effects', ['$http', '$q', function ($http, $q) {
+
+    var _allEffects;
+    var effects = {
+      all: {},
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return _allEffects.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/effects',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        _allEffects = [];
+        effects.all = result.data;
+        _allEffects = _allEffects.concat(effects.all.boons);
+        _allEffects = _allEffects.concat(effects.all.conditions);
+        _allEffects = _allEffects.concat(effects.all.status);
+
+        _allEffects.forEach(function (e) {
+          return e.icon = 'effects/' + e.id;
+        });
+
+        effects.list = _allEffects;
+
+        deferred.resolve(effects.all);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    effects.promise = initialize();
+
+    return effects;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  function chooseIcon(power) {
+
+    switch (power.source) {
+      case 'arms':
+        return 'battle-axe';
+      case 'elemental-magic':
+        return 'frostfire';
+      case 'shadow-arts':
+        return 'domino-mask';
+    }
+
+    return 'private';
+  }
+
+  ndnd.factory('powers', ['$http', '$q', function ($http, $q) {
+
+    var powers = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return powers.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/powers',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        powers.list = result.data;
+        powers.list.forEach(function (p) {
+          return p.icon = chooseIcon(p);
+        });
+
+        deferred.resolve(powers.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    powers.promise = initialize();
+
+    return powers;
   }]);
 })(angular.module('ndnd'));
 /*globals angular _*/

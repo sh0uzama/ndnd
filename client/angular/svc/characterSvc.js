@@ -61,7 +61,7 @@
   Hero.Deflate = function(source) {
     var deflated = angular.copy(source);
     deflated.effects = HeroEffects.Deflate(source.effects);
-    deflated.stats = HeroStats.Deflates(source.stats);
+    deflated.stats = HeroStats.Deflate(source.stats);
     deflated.powers = source.powers.filter(p => p.source !== 'base').map(p => p.id);
     return deflated;
   };

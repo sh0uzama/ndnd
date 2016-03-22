@@ -3,12 +3,6 @@ var textTransformer = require('./textTransformer');
 
 var powerList = [];
 
-function flagWithSource(jsonFile, source) {
-  var arr = require(jsonFile);
-  arr.forEach(e => e.source = source);
-  return arr;
-}
-
 function textToHtml(power) {
 
   if (power.requirements) {
@@ -21,10 +15,10 @@ function textToHtml(power) {
 
 }
 
-powerList = powerList.concat(flagWithSource("../data/powers/_base.json", "base"));
-powerList = powerList.concat(flagWithSource("../data/powers/arms.json", "arms"));
-powerList = powerList.concat(flagWithSource("../data/powers/elemental-magic.json", "elemental-magic"));
-powerList = powerList.concat(flagWithSource("../data/powers/shadow-arts.json", "shadow-arts"));
+powerList = powerList.concat(require("../data/powers/_base.json"));
+powerList = powerList.concat(require("../data/powers/arms.json"));
+powerList = powerList.concat(require("../data/powers/elemental-magic.json"));
+powerList = powerList.concat(require("../data/powers/shadow-arts.json"));
 
 powerList.forEach(textToHtml);
 
