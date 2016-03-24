@@ -23,6 +23,7 @@
           resolve: {
             _powers: function(powers) { return powers.promise; },
             _effects: function(effects) { return effects.promise; },
+            _perks: function(perks) { return perks.promise; }
           }
         });
 

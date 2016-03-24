@@ -55,6 +55,8 @@
     this.hasInstant = false;
 
     this.powers = [];
+    this.perks = [];
+    
     this.effects = new HeroEffects();
     this.stats = new HeroStats();
   }
@@ -63,9 +65,10 @@
     deflated.effects = HeroEffects.Deflate(source.effects);
     deflated.stats = HeroStats.Deflate(source.stats);
     deflated.powers = source.powers.filter(p => p.source !== 'base').map(p => p.id);
+    deflated.perks = source.perks.map(p => p.id);
     return deflated;
   };
-  Hero.Inflate = function(source, toBeInflated, powers, basePowers) {
+  Hero.Inflate = function(source, toBeInflated, powers, basePowers, perks) {
     source.name = toBeInflated.name;
     source.wounds = toBeInflated.wounds || 0;
     source.energy = toBeInflated.energy || 0;
@@ -75,14 +78,17 @@
     source.powers = (toBeInflated.powers || [])
       .map(id => powers.byId(id))
       .concat(basePowers);
+      
+    source.perks = (toBeInflated.perks || [])
+      .map(id => perks.byId(id));
 
     HeroEffects.Inflate(source.effects, toBeInflated.effects);
     HeroStats.Inflate(source.stats, toBeInflated.stats);
   };
 
   ndnd.factory('character', [
-    'localStorageService', 'powers',
-    function(storage, powers) {
+    'localStorageService', 'powers', 'perks',
+    function(storage, powers, perks) {
 
       var basePowers = powers.list.filter(p => p.source === 'base');
 
@@ -105,15 +111,17 @@
       function load() {
         // load
         var string = storage.get(heroKey);
+        var deflated = {};
 
         if (string) {
           // decompress
           string = LZString.decompress(string);
           // fromJson
-          var deflated = angular.fromJson(string);
-          // inflate model
-          Hero.Inflate(hero, deflated, powers, basePowers);
+          deflated = angular.fromJson(string);
         }
+
+        // inflate model
+        Hero.Inflate(hero, deflated, powers, basePowers, perks);
 
       }
 

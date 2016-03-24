@@ -29,6 +29,20 @@
           character.persist();
         });
       };
+      
+      ctrl.chooseNewPerks = function($ev) {
+        $mdDialog.show({
+          controller: 'addNewPerkCtrl',
+          controllerAs: 'ctrl',
+          templateUrl: 'client/angular/ctrl/addNewPerk/addNewPerkTmpl.html',
+          parent: angular.element(document.body),
+          targetEvent: $ev,
+          clickOutsideToClose: true,
+          fullscreen: true
+        }).then(function() {
+          character.persist();
+        });
+      };
 
       ctrl.removePower = function(power, $ev) {
 
@@ -43,6 +57,24 @@
         $mdDialog.show(confirm).then(function() {
           var idx = _.indexOf(ctrl.hero.powers, power);
           ctrl.hero.powers.splice(idx, 1);
+          character.persist();
+        });
+
+      };
+      
+      ctrl.removePerk = function(perk, $ev) {
+
+        var confirm = $mdDialog.confirm()
+          .title(`Delete ${perk.name}?`)
+          .textContent(`Do you want to remove ${perk.name} from your list?`)
+          .ariaLabel(`Delete ${perk.name}?`)
+          .targetEvent($ev)
+          .ok('Yes')
+          .cancel('No');
+
+        $mdDialog.show(confirm).then(function() {
+          var idx = _.indexOf(ctrl.hero.perks, perk);
+          ctrl.hero.perks.splice(idx, 1);
           character.persist();
         });
 

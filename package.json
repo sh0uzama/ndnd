@@ -6,6 +6,7 @@
   "repository": "",
   "author": "sh0uzama",
   "dependencies": {
+    "babel-polyfill": "^6.7.4",
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
     "gulp-babel": "^6.1.2",

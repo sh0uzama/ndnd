@@ -1,0 +1,197 @@
+[
+  {
+    "id": "survival-instincts",
+    "name": "Survival Instincts",
+    "effect": "You suffer no penalties while Injured. If you are Injured at the start of your turn, you gain Regeneration."
+  },
+  {
+    "id": "grit-and-resolve",
+    "name": "Grit and Resolve",
+    "effect": "Your Melee attacks deal additional damage equal to the numer of Persistent Wounds you are currently suffering."
+  },
+  {
+    "id": "felice-grace",
+    "name": "Feline Grace",
+    "effect": "You gain +1 to all your Agility rolls."
+  },
+  {
+    "id": "brute-force",
+    "name": "Brute Force",
+    "effect": "You gain +1 to all your Strength rolls."
+  },
+  {
+    "id": "perfect-shape",
+    "name": "Perfect Shape",
+    "effect": "You gain +1 to all your Toughness rolls."
+  },
+  {
+    "id": "iron-mind",
+    "name": "Iron Mind",
+    "effect": "You gain +1 to all your Willpower rolls."
+  },
+  {
+    "id": "opportunist",
+    "name": "Opportunist",
+    "effect": "You have Advantage when making Opportunity Attacks, and they deal +5 damage."
+  },
+  {
+    "id": "blood-thirst",
+    "name": "Blood Thirst",
+    "effect": "Melee or Ranged Attacks made against Bleeding targets deal +5 damage, and you gain Regeneration."
+  },
+  {
+    "id": "panic-shroud",
+    "name": "Panic Shroud",
+    "effect": "When you suffer 8 or more wounds from a single attack, you immediately gain Shroud."
+  },
+  {
+    "id": "shroud-walker",
+    "name": "Shroud Walker",
+    "effect": "While under Shroud you don't provoke Attacks of Opportunity, and your Movement is increased by 1."
+  },
+  {
+    "id": "shroud-master",
+    "name": "Shroud Master",
+    "effect": "When you gain Shroud you remove a condition from you, and attacks made while in Shroud deal +5 damage."
+  },
+  {
+    "id": "second-skin",
+    "name": "Second Skin",
+    "effect": "Wearing a Light Armor gives you +1 to Armor."
+  },
+  {
+    "id": "unhindered",
+    "name": "Unhindered",
+    "effect": "Heavy Armor does not slow your Movement, and your Dodge rolls while wearing Heavy Armor only suffer a -1 penalty."
+  },
+  {
+    "id": "opening-strikes",
+    "name": "Opening Strikes",
+    "effect": "When you hit a target with a Melee or Ranged Attack, if the target is at full health your attack deals +15 damage."
+  },
+  {
+    "id": "lone-wolf",
+    "name": "Lone Wolf",
+    "effect": "If there are no active allies within 2 squares from you when performing an Attack, your attack deal +5 damage."
+  },
+  {
+    "id": "oppressive-threatener",
+    "name": "Oppressive Threatener",
+    "effect": "Your allies have Advantage when attacking any creature Threatened by you."
+  },
+  {
+    "id": "threatening-attacks",
+    "name": "Threatening Attacks",
+    "effect": "Whenever you attack an enemy, whether you hit or miss, you may Threaten that enemy."
+  },
+  {
+    "id": "battlefield-superiority",
+    "name": "Battlefield Superiority",
+    "effect": "Enemies (in your melee range) Threatened by you provoke an Opportunity Attack (from you) when they move or make an attack that does not include you amongst their targets."
+  },
+  {
+    "id": "footwork-advantage",
+    "name": "Footwork Advantage",
+    "effect": "Your Melee and Ranged attacks deal +5 damage against Immobilized, Crippled, Chilled or Prone targets."
+  },
+  {
+    "id": "precise-aim",
+    "name": "Precise Aim",
+    "effect": "You do not have disadvantage for attacking creature 5 squares from you or more."
+  },
+  {
+    "id": "combat-spellcaster",
+    "name": "Combat Spellcaster",
+    "effect": "Casting Spells does not provoke Opportunity Attacks, and you can cast Spells while wearing Armor and/or Shields."
+  },
+  {
+    "id": "spellblade",
+    "name": "Spellblade",
+    "effect": "While wielding a weapon and an attunement, your [Weapon] and [Spell] power are both increased by 2."
+  },
+  {
+    "id": "two-handed-mastery",
+    "name": "Two-Handed Mastery",
+    "effect": "Your Melee Attacks made with a two-handed weapon deal +4 damage."
+  },
+  {
+    "id": "heavy-weapon-mastery",
+    "name": "Heavy Weapon Mastery",
+    "effect": "Your Melee Attacks made with a one-handed heavy weapon deal +3 damage."
+  },
+  {
+    "id": "dagger-mastery",
+    "name": "Dagger Mastery",
+    "effect": "Your Melee Attacks made with a one-handed light weapon deal +5 damage when you have Advantage on the target."
+  },
+  {
+    "id": "ambidexterity",
+    "name": "Ambidexterity",
+    "effect": "While Dual Wielding, your Melee Attacks deal additional damage equal to you STR score (if your off-hand weapon is Heavy) or AGI score (if it's Light)."
+  },
+  {
+    "id": "shield-expert",
+    "name": "Shield Expert",
+    "effect": "When you use a Block action, your shield blocks 3 additional damage."
+  },
+  {
+    "id": "marksman",
+    "name": "Marksman",
+    "effect": "Your Ranged Attacks deal +3 damage."
+  },
+  {
+    "id": "skirmisher",
+    "name": "Skirmisher",
+    "effect": "You can move 1 square after (and if) you hit with a Ranged Basic Attack with a Shortbow.\nYou can only do this only once per round and only during your turn, and this movement does not provoke Opportunity Attacks."
+  },
+  {
+    "id": "overdraw",
+    "name": "Overdraw",
+    "effect": "The weapon range of longbows is increased by 2."
+  },
+  {
+    "id": "close-quarter-marksman",
+    "name": "Close Quarter Marksman",
+    "effect": "Your Ranged Attacks do not provoke Opportunity Attacks."
+  },
+  {
+    "id": "arcane-reach",
+    "name": "Arcane Reach",
+    "effect": "The range of all your Spells is increased by 1."
+  },
+  {
+    "id": "war-wizard",
+    "name": "War Wizard",
+    "effect": "Your Spell Area Attacks ignore any Disadvantage, and you can choose not to target your allies in their Area."
+  },
+  {
+    "id": "spell-flow",
+    "name": "Spell Flow",
+    "effect": "After casting any spell while under any attunement, as a free action you may change your current attunement(s) to any other attunement (or attunement combination)."
+  },
+  {
+    "id": "recovery-matrix",
+    "name": "Recovery Matrix",
+    "effect": "When you cast a Spell that costs Energy, you gain Regeneration."
+  },
+  {
+    "id": "intensity",
+    "name": "Intensity",
+    "effect": "Burning inflicted by you makes the target lose 3 Wounds instead of 2."
+  },
+  {
+    "id": "pyromancer",
+    "name": "Pyromancer",
+    "effect": "While attuned to Fire, whenever you inflict Fire damage you also inflict Burning on the target."
+  },
+  {
+    "id": "razor-shards",
+    "name": "Razor Shards",
+    "effect": "While attuned to Frost, whenever you Cripple, Chill or Immobilize a target, you also inflict Bleeding."
+  },
+  {
+    "id": "deep-freeze",
+    "name": "Deep Freeze",
+    "effect": "While attuned to Frost, whenever you Cripple a target, you may Chill it instead."
+  }
+]

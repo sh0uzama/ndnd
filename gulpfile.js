@@ -7,6 +7,7 @@ var babel = require('gulp-babel');
 
 var approot = 'client/angular/';
 var scripts = [
+    'client/scripts/polyfills.js',
     approot + 'login.js',
     approot + 'ndnd.js',
     approot + '**/*.js'

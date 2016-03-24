@@ -1,0 +1,23 @@
+<md-card class="power-card" ng-class="{'expanded':perk.expanded}" ng-repeat="perk in ctrl.hero.perks">
+  <md-card-header class="power-card-header" ng-click="perk.expanded = !perk.expanded" md-ink-ripple layout="row">
+    <md-card-avatar>
+      <img ng-src="client/icons/perk.svg" />
+    </md-card-avatar>
+    <md-card-header-text flex>
+      <span class="md-title">{{perk.name}}</span>
+    </md-card-header-text>
+  </md-card-header>
+  <md-card-content class="power-card-description" ng-if="perk.expanded">
+    <div class="card-line" ng-if="perk.requirements">
+      <h5 class="card-line-title">Requirements</h5>
+      <p class="card-line-text" compile="perk.requirements"></p>
+    </div>
+    <div class="card-full-text" compile="perk.effect"></div>
+  </md-card-content>
+  <md-card-actions layout="row" layout-align="end center">
+    <md-button class="md-icon-button" aria-label="Delete" ng-click="ctrl.removePerk(perk, $event)">
+      <md-icon>delete</md-icon>
+      <md-tooltip>Delete this Power</md-tooltip>
+    </md-button>
+  </md-card-actions>
+</md-card>

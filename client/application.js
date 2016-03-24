@@ -2,6 +2,34 @@
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+(function () {
+
+  'use strict';
+
+  if (!Array.prototype.find) {
+    Array.prototype.find = function (predicate) {
+      if (this === null) {
+        throw new TypeError('Array.prototype.find called on null or undefined');
+      }
+      if (typeof predicate !== 'function') {
+        throw new TypeError('predicate must be a function');
+      }
+      var list = Object(this);
+      var length = list.length >>> 0;
+      var thisArg = arguments[1];
+      var value;
+
+      for (var i = 0; i < length; i++) {
+        value = list[i];
+        if (predicate.call(thisArg, value, i, list)) {
+          return value;
+        }
+      }
+      return undefined;
+    };
+  }
+})();
+
 /*globals angular*/
 (function () {
   angular.module('LoginApp', ['ngMaterial']);
@@ -26,6 +54,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         },
         _effects: function _effects(effects) {
           return effects.promise;
+        },
+        _perks: function _perks(perks) {
+          return perks.promise;
         }
       }
     });
@@ -89,6 +120,157 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   });
 })(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('effects', ['$http', '$q', function ($http, $q) {
+
+    var _allEffects;
+    var effects = {
+      all: {},
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return _allEffects.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/effects',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        _allEffects = [];
+        effects.all = result.data;
+        _allEffects = _allEffects.concat(effects.all.boons);
+        _allEffects = _allEffects.concat(effects.all.conditions);
+        _allEffects = _allEffects.concat(effects.all.status);
+
+        _allEffects.forEach(function (e) {
+          return e.icon = 'effects/' + e.id;
+        });
+
+        effects.list = _allEffects;
+
+        deferred.resolve(effects.all);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    effects.promise = initialize();
+
+    return effects;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('perks', ['$http', '$q', function ($http, $q) {
+
+    var perks = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return perks.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/perks',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        perks.list = result.data;
+        deferred.resolve(perks.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    perks.promise = initialize();
+
+    return perks;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  function chooseIcon(power) {
+
+    switch (power.source) {
+      case 'arms':
+        return 'battle-axe';
+      case 'elemental-magic':
+        return 'frostfire';
+      case 'shadow-arts':
+        return 'domino-mask';
+    }
+
+    return 'private';
+  }
+
+  ndnd.factory('powers', ['$http', '$q', function ($http, $q) {
+
+    var powers = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return powers.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/powers',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        powers.list = result.data;
+        powers.list.forEach(function (p) {
+          return p.icon = chooseIcon(p);
+        });
+
+        deferred.resolve(powers.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    powers.promise = initialize();
+
+    return powers;
+  }]);
+})(angular.module('ndnd'));
 /*globals angular LZString _*/
 (function (ndnd) {
 
@@ -143,6 +325,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     this.hasInstant = false;
 
     this.powers = [];
+    this.perks = [];
+
     this.effects = new HeroEffects();
     this.stats = new HeroStats();
   }
@@ -155,9 +339,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }).map(function (p) {
       return p.id;
     });
+    deflated.perks = source.perks.map(function (p) {
+      return p.id;
+    });
     return deflated;
   };
-  Hero.Inflate = function (source, toBeInflated, powers, basePowers) {
+  Hero.Inflate = function (source, toBeInflated, powers, basePowers, perks) {
     source.name = toBeInflated.name;
     source.wounds = toBeInflated.wounds || 0;
     source.energy = toBeInflated.energy || 0;
@@ -168,11 +355,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return powers.byId(id);
     }).concat(basePowers);
 
+    source.perks = (toBeInflated.perks || []).map(function (id) {
+      return perks.byId(id);
+    });
+
     HeroEffects.Inflate(source.effects, toBeInflated.effects);
     HeroStats.Inflate(source.stats, toBeInflated.stats);
   };
 
-  ndnd.factory('character', ['localStorageService', 'powers', function (storage, powers) {
+  ndnd.factory('character', ['localStorageService', 'powers', 'perks', function (storage, powers, perks) {
 
     var basePowers = powers.list.filter(function (p) {
       return p.source === 'base';
@@ -196,15 +387,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     function load() {
       // load
       var string = storage.get(heroKey);
+      var deflated = {};
 
       if (string) {
         // decompress
         string = LZString.decompress(string);
         // fromJson
-        var deflated = angular.fromJson(string);
-        // inflate model
-        Hero.Inflate(hero, deflated, powers, basePowers);
+        deflated = angular.fromJson(string);
       }
+
+      // inflate model
+      Hero.Inflate(hero, deflated, powers, basePowers, perks);
     }
 
     // first thing, try and load from repository
@@ -328,115 +521,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
-/*globals angular*/
+/*globals angular _*/
 (function (ndnd) {
 
-  ndnd.factory('effects', ['$http', '$q', function ($http, $q) {
+  ndnd.controller('addNewPerkCtrl', ['$mdDialog', 'perks', 'character', function ($mdDialog, perks, character) {
 
-    var _allEffects;
-    var effects = {
-      all: {},
-      list: [],
-      promise: null,
-      byId: byId
+    var ctrl = this;
+
+    ctrl.hero = character.hero;
+
+    // filter out perks used by the hero
+    var filteredPerks = _.difference(perks.list, ctrl.hero.perks, function (p) {
+      return p.id;
+    });
+    ctrl.perks = angular.copy(filteredPerks);
+
+    ctrl.okEnabled = false;
+    ctrl.ok = function () {
+      var selectedPerks = ctrl.perks.filter(function (p) {
+        return p.selected;
+      });
+      selectedPerks.forEach(function (p) {
+        ctrl.hero.perks.unshift(perks.byId(p.id));
+      });
+      $mdDialog.hide();
     };
 
-    function byId(id) {
-      return _allEffects.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/effects',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        _allEffects = [];
-        effects.all = result.data;
-        _allEffects = _allEffects.concat(effects.all.boons);
-        _allEffects = _allEffects.concat(effects.all.conditions);
-        _allEffects = _allEffects.concat(effects.all.status);
-
-        _allEffects.forEach(function (e) {
-          return e.icon = 'effects/' + e.id;
-        });
-
-        effects.list = _allEffects;
-
-        deferred.resolve(effects.all);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    effects.promise = initialize();
-
-    return effects;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  function chooseIcon(power) {
-
-    switch (power.source) {
-      case 'arms':
-        return 'battle-axe';
-      case 'elemental-magic':
-        return 'frostfire';
-      case 'shadow-arts':
-        return 'domino-mask';
-    }
-
-    return 'private';
-  }
-
-  ndnd.factory('powers', ['$http', '$q', function ($http, $q) {
-
-    var powers = {
-      list: [],
-      promise: null,
-      byId: byId
+    ctrl.cancel = function () {
+      $mdDialog.hide();
     };
 
-    function byId(id) {
-      return powers.list.find(function (p) {
-        return p.id === id;
+    ctrl.selectPerk = function (perk, $event) {
+      perk.selected = !perk.selected;
+      ctrl.okEnabled = ctrl.perks.some(function (p) {
+        return p.selected;
       });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/powers',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        powers.list = result.data;
-        powers.list.forEach(function (p) {
-          return p.icon = chooseIcon(p);
-        });
-
-        deferred.resolve(powers.list);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    powers.promise = initialize();
-
-    return powers;
+      $event.stopPropagation();
+    };
   }]);
 })(angular.module('ndnd'));
 /*globals angular _*/
@@ -508,6 +629,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     };
 
+    ctrl.chooseNewPerks = function ($ev) {
+      $mdDialog.show({
+        controller: 'addNewPerkCtrl',
+        controllerAs: 'ctrl',
+        templateUrl: 'client/angular/ctrl/addNewPerk/addNewPerkTmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: $ev,
+        clickOutsideToClose: true,
+        fullscreen: true
+      }).then(function () {
+        character.persist();
+      });
+    };
+
     ctrl.removePower = function (power, $ev) {
 
       var confirm = $mdDialog.confirm().title('Delete ' + power.name + '?').textContent('Do you want to remove ' + power.name + ' from your list?').ariaLabel('Delete ' + power.name + '?').targetEvent($ev).ok('Yes').cancel('No');
@@ -515,6 +650,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       $mdDialog.show(confirm).then(function () {
         var idx = _.indexOf(ctrl.hero.powers, power);
         ctrl.hero.powers.splice(idx, 1);
+        character.persist();
+      });
+    };
+
+    ctrl.removePerk = function (perk, $ev) {
+
+      var confirm = $mdDialog.confirm().title('Delete ' + perk.name + '?').textContent('Do you want to remove ' + perk.name + ' from your list?').ariaLabel('Delete ' + perk.name + '?').targetEvent($ev).ok('Yes').cancel('No');
+
+      $mdDialog.show(confirm).then(function () {
+        var idx = _.indexOf(ctrl.hero.perks, perk);
+        ctrl.hero.perks.splice(idx, 1);
         character.persist();
       });
     };

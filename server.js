@@ -32,6 +32,7 @@ app.use('/client', express.static(__dirname + '/client'));
 
 // API ENDPOINTS CONFIGURATION
 app.use('/api/powers', require('./api/powers'));
+app.use('/api/perks', require('./api/perks'));
 app.use('/api/effects', require('./api/effects'));
 
 server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function() {
