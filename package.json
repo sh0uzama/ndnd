@@ -6,14 +6,18 @@
   "repository": "",
   "author": "sh0uzama",
   "dependencies": {
+    "babel-core": "^6.7.4",
     "babel-polyfill": "^6.7.4",
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
+    "firebase": "^2.4.1",
     "gulp-babel": "^6.1.2",
     "less-middleware": "^2.0.1",
+    "lodash": "^4.6.1",
     "marko": "^2.8.2",
     "node-uuid": "^1.4.7",
-    "underscore": "^1.8.3"
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.7.2",

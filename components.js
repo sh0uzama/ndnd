@@ -1,13 +1,11 @@
 const cdnjs = "//cdnjs.cloudflare.com/ajax/libs"
 
 const versions = {
-  angular: "/angular.js/1.5.0",
+  angular: "/angular.js/1.5.2",
   angularMaterial: "/angular-material/1.0.6"
 };
 
 var jsList = [
-  //JQUERY
-  cdnjs + "/jquery/3.0.0-beta1/jquery.min.js",
   //LODASH
   cdnjs + "/lodash.js/4.6.1/lodash.min.js",
   //ANGULAR
