@@ -1,7 +1,8 @@
 var _ = require('lodash');
+var fb = require('../firebase.config');
 var textTransformer = require('./textTransformer');
 
-var powerList = [];
+var _powerList = [];
 
 function textToHtml(power) {
 
@@ -15,19 +16,21 @@ function textToHtml(power) {
 
 }
 
-powerList = powerList.concat(require("../data/powers/_base.json"));
-powerList = powerList.concat(require("../data/powers/arms.json"));
-powerList = powerList.concat(require("../data/powers/elemental-magic.json"));
-powerList = powerList.concat(require("../data/powers/shadow-arts.json"));
+fb.child('powers').once("value", function(data) {
 
-powerList.forEach(textToHtml);
+  var value = data.val();
+
+  _powerList = Object.keys(value).map(key => value[key]);
+  _powerList.forEach(textToHtml);
+
+});
 
 function getAll() {
-  return powerList;
+  return _powerList;
 }
 
 function get(id) {
-  return _.find(powerList, e => e.id === id);
+  return _.find(_powerList, e => e.id === id);
 }
 
 module.exports = {

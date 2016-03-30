@@ -10,12 +10,18 @@ perkList.forEach(p => perks[uuid.v4()] = p);
 fb.child('perks').set(perks);
 
 // EFFECTS
-var effectList = require('./data/effects/boons.json')
-      .concat(require('./data/effects/condis.json'))
-      .concat(require('./data/effects/status.json'));
+var boonList = require('./data/effects/boons.json');
+var condiList = require('./data/effects/condis.json');
+var statusList = require('./data/effects/status.json');
 var effects = {};
 
-effectList.forEach(e => effects[uuid.v4()] = e);
+boonList.forEach(b => b.type = 'boon');
+condiList.forEach(b => b.type = 'condition');
+statusList.forEach(b => b.type = 'status');
+
+boonList.forEach(e => effects[uuid.v4()] = e);
+condiList.forEach(e => effects[uuid.v4()] = e);
+statusList.forEach(e => effects[uuid.v4()] = e);
 
 fb.child('effects').set(effects);
 

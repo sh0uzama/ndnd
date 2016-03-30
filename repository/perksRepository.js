@@ -1,7 +1,8 @@
 var _ = require('lodash');
+var fb = require('../firebase.config');
 var textTransformer = require('./textTransformer');
 
-var perkList = [];
+var _perkList = [];
 
 function textToHtml(p) {
 
@@ -15,15 +16,21 @@ function textToHtml(p) {
 
 }
 
-perkList = require("../data/perks/perks.json");
-perkList.forEach(textToHtml);
+fb.child('perks').once("value", function(data) {
+
+  var value = data.val();
+
+  _perkList = Object.keys(value).map(key => value[key]);
+  _perkList.forEach(textToHtml);
+
+});
 
 function getAll() {
-  return perkList;
+  return _perkList;
 }
 
 function get(id) {
-  return _.find(perkList, e => e.id === id);
+  return _.find(_perkList, e => e.id === id);
 }
 
 module.exports = {
