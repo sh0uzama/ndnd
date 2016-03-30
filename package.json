@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "repository" :  { 
-    "type" : "git", "url" : "https://github.com/sh0uzama/ndnd.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sh0uzama/ndnd.git"
   },
   "license": "MIT",
   "author": "sh0uzama",
@@ -13,13 +14,14 @@
     "babel-polyfill": "^6.7.4",
     "body-parser": "^1.14.2",
     "express": "^4.13.4",
-    "firebase": "^2.4.1",
+    "firebase": "^2.4.2",
     "gulp-babel": "^6.1.2",
     "less-middleware": "^2.0.1",
     "lodash": "^4.6.1",
     "marko": "^2.8.2",
     "node-uuid": "^1.4.7",
     "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
     "passport-local": "^1.0.0"
   },
   "devDependencies": {
