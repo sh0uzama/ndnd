@@ -1,11 +1,5 @@
 var fb = require('../firebase.config');
-var textTransformer = require('./textTransformer');
-
-function textToHtml(obj) {
-  if (obj.description) {
-    obj.description = textTransformer.textToHtml(obj.description);
-  }
-}
+var utils = require('./utils');
 
 var _all = [],
   _boons = [],
@@ -15,10 +9,9 @@ var _all = [],
 fb.child('effects').once("value", function(data) {
 
   var value = data.val();
-
-  _all = Object.keys(value).map(key => value[key]);
-  _all.forEach(textToHtml);
-
+  
+  _all = utils.map(value);
+  
   _boons = _all.filter(e => e.type === 'boon');
   _conditions = _all.filter(e => e.type === 'condition');
   _status = _all.filter(e => e.type === 'status');

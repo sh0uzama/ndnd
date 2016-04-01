@@ -123,7 +123,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function (ndnd) {
 
-  ndnd.factory('effects', ['$http', '$q', function ($http, $q) {
+  ndnd.factory('effects', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
 
     var _allEffects;
     var effects = {
@@ -132,6 +132,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       promise: null,
       byId: byId
     };
+
+    function textToHtml(obj) {
+      if (obj.description) {
+        obj.description = htmlifyer.textToHtml(obj.description);
+      }
+    }
 
     function byId(id) {
       return _allEffects.find(function (p) {
@@ -152,6 +158,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         _allEffects = [];
         effects.all = result.data;
+
+        effects.all.boons.forEach(textToHtml);
+        effects.all.conditions.forEach(textToHtml);
+        effects.all.status.forEach(textToHtml);
+
         _allEffects = _allEffects.concat(effects.all.boons);
         _allEffects = _allEffects.concat(effects.all.conditions);
         _allEffects = _allEffects.concat(effects.all.status);
@@ -162,6 +173,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         effects.list = _allEffects;
 
+        console.log(effects.all);
         deferred.resolve(effects.all);
       }, deferred.reject);
 
@@ -176,13 +188,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function (ndnd) {
 
-  ndnd.factory('perks', ['$http', '$q', function ($http, $q) {
+  ndnd.factory('perks', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
 
     var perks = {
       list: [],
       promise: null,
       byId: byId
     };
+
+    function textToHtml(p) {
+
+      if (p.requirements) {
+        p.requirements = htmlifyer.textToHtml(p.requirements);
+      }
+
+      if (p.effect) {
+        p.effect = htmlifyer.textToHtml(p.effect);
+      }
+    }
 
     function byId(id) {
       return perks.list.find(function (p) {
@@ -202,6 +225,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       $http(req).then(function (result) {
 
         perks.list = result.data;
+        perks.list.forEach(textToHtml);
+        console.log(perks.list);
         deferred.resolve(perks.list);
       }, deferred.reject);
 
@@ -216,27 +241,38 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function (ndnd) {
 
-  function chooseIcon(power) {
-
-    switch (power.source) {
-      case 'arms':
-        return 'battle-axe';
-      case 'elemental-magic':
-        return 'frostfire';
-      case 'shadow-arts':
-        return 'domino-mask';
-    }
-
-    return 'private';
-  }
-
-  ndnd.factory('powers', ['$http', '$q', function ($http, $q) {
+  ndnd.factory('powers', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
 
     var powers = {
       list: [],
       promise: null,
       byId: byId
     };
+
+    function chooseIcon(power) {
+
+      switch (power.source) {
+        case 'arms':
+          return 'battle-axe';
+        case 'elemental-magic':
+          return 'frostfire';
+        case 'shadow-arts':
+          return 'domino-mask';
+      }
+
+      return 'private';
+    }
+
+    function textToHtml(power) {
+
+      if (power.requirements) {
+        power.requirements = htmlifyer.textToHtml(power.requirements);
+      }
+
+      if (power.effect) {
+        power.effect = htmlifyer.textToHtml(power.effect);
+      }
+    }
 
     function byId(id) {
       return powers.list.find(function (p) {
@@ -257,9 +293,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         powers.list = result.data;
         powers.list.forEach(function (p) {
-          return p.icon = chooseIcon(p);
+          p.icon = chooseIcon(p);
+          textToHtml(p);
         });
 
+        console.log(powers.list);
         deferred.resolve(powers.list);
       }, deferred.reject);
 
@@ -490,6 +528,40 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return {
       getHintObject: getHintObject,
       openHint: openHint
+    };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular LZString _*/
+(function (ndnd) {
+
+  ndnd.factory('htmlifyer', [function () {
+
+    var hintRegex = /\{.*?\}/g;
+    var newlineRegex = /(?:\r\n|\r|\n)/g;
+
+    function hintToHtml(hint) {
+
+      hint = hint.substring(1, hint.length - 1);
+      var pieces = hint.split(':');
+
+      if (pieces.length == 2) {
+        var label = pieces[1];
+        label = label.charAt(0).toUpperCase() + label.slice(1);
+        pieces.push(label);
+      }
+
+      return '<a href="#" ng-click="ctrl.openHint(\'' + pieces[0] + '\',\'' + pieces[1] + '\')">' + pieces[2] + '</a>';
+    }
+
+    function textToHtml(aString) {
+
+      var result = String(aString).replace(newlineRegex, '<br />');
+      result = result.replace(hintRegex, hintToHtml);
+      return result;
+    }
+
+    return {
+      textToHtml: textToHtml
     };
   }]);
 })(angular.module('ndnd'));

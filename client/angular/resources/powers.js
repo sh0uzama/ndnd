@@ -1,31 +1,42 @@
 /*globals angular*/
 (function(ndnd) {
 
-  function chooseIcon(power) {
-
-    switch (power.source) {
-      case 'arms':
-        return 'battle-axe';
-      case 'elemental-magic':
-        return 'frostfire';
-      case 'shadow-arts':
-        return 'domino-mask';
-    }
-
-    return 'private';
-
-  }
-
-
   ndnd.factory('powers', [
-    '$http', '$q',
-    function($http, $q) {
+    '$http', '$q', 'htmlifyer',
+    function($http, $q, htmlifyer) {
 
       var powers = {
         list: [],
         promise: null,
         byId: byId
       };
+
+      function chooseIcon(power) {
+
+        switch (power.source) {
+          case 'arms':
+            return 'battle-axe';
+          case 'elemental-magic':
+            return 'frostfire';
+          case 'shadow-arts':
+            return 'domino-mask';
+        }
+
+        return 'private';
+
+      }
+
+      function textToHtml(power) {
+
+        if (power.requirements) {
+          power.requirements = htmlifyer.textToHtml(power.requirements);
+        }
+
+        if (power.effect) {
+          power.effect = htmlifyer.textToHtml(power.effect);
+        }
+
+      }
 
       function byId(id) {
         return powers.list.find(p => p.id === id);
@@ -43,7 +54,10 @@
         $http(req).then(function(result) {
 
           powers.list = result.data;
-          powers.list.forEach(p => p.icon = chooseIcon(p));
+          powers.list.forEach(p => {
+            p.icon = chooseIcon(p);
+            textToHtml(p);
+          });
 
           deferred.resolve(powers.list);
 

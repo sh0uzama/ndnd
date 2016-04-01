@@ -1,27 +1,14 @@
 var _ = require('lodash');
 var fb = require('../firebase.config');
-var textTransformer = require('./textTransformer');
+var utils = require('./utils');
 
 var _powerList = [];
 
-function textToHtml(power) {
-
-  if (power.requirements) {
-    power.requirements = textTransformer.textToHtml(power.requirements);
-  }
-
-  if (power.effect) {
-    power.effect = textTransformer.textToHtml(power.effect);
-  }
-
-}
 
 fb.child('powers').once("value", function(data) {
 
   var value = data.val();
-
-  _powerList = Object.keys(value).map(key => value[key]);
-  _powerList.forEach(textToHtml);
+  _powerList = utils.map(value);
 
 });
 
