@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var repo = require('../repository/perksRepository');
+var repo = require('../google-repository/perksRepository');
 
 var jsonSchema = {
   "type": "object",
@@ -29,7 +29,7 @@ var jsonForm = [
   "id", {
     key: "effect",
     type: "textarea",
-    placeholder: "perk effect"
+    placeholder: "the effect of the perk"
   },
 ];
 

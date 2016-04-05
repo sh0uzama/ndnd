@@ -43,11 +43,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   ndnd.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     //ROOT
+
     $stateProvider.state('ndnd', {
       url: '/',
-      templateUrl: 'client/angular/ctrl/root/rootTmpl.html',
-      controller: 'rootCtrl',
-      controllerAs: 'ctrl',
+      template: '<ui-view layout="row" flex></ui-view>',
       resolve: {
         _powers: function _powers(powers) {
           return powers.promise;
@@ -61,7 +60,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     });
 
-    $urlRouterProvider.otherwise('/');
+    $stateProvider.state('ndnd.character', {
+      url: 'character',
+      templateUrl: 'client/angular/ctrl/root/rootTmpl.html',
+      controller: 'rootCtrl',
+      controllerAs: 'ctrl'
+    });
+
+    $urlRouterProvider.otherwise('/character');
   }]);
 
   ndnd.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
@@ -119,195 +125,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     };
   });
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('effects', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
-
-    var _allEffects;
-    var effects = {
-      all: {},
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function textToHtml(obj) {
-      if (obj.description) {
-        obj.description = htmlifyer.textToHtml(obj.description);
-      }
-    }
-
-    function byId(id) {
-      return _allEffects.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/effects',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        _allEffects = [];
-        effects.all = result.data;
-
-        effects.all.boons.forEach(textToHtml);
-        effects.all.conditions.forEach(textToHtml);
-        effects.all.status.forEach(textToHtml);
-
-        _allEffects = _allEffects.concat(effects.all.boons);
-        _allEffects = _allEffects.concat(effects.all.conditions);
-        _allEffects = _allEffects.concat(effects.all.status);
-
-        _allEffects.forEach(function (e) {
-          return e.icon = 'effects/' + e.id;
-        });
-
-        effects.list = _allEffects;
-
-        console.log(effects.all);
-        deferred.resolve(effects.all);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    effects.promise = initialize();
-
-    return effects;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('perks', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
-
-    var perks = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function textToHtml(p) {
-
-      if (p.requirements) {
-        p.requirements = htmlifyer.textToHtml(p.requirements);
-      }
-
-      if (p.effect) {
-        p.effect = htmlifyer.textToHtml(p.effect);
-      }
-    }
-
-    function byId(id) {
-      return perks.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/perks',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        perks.list = result.data;
-        perks.list.forEach(textToHtml);
-        console.log(perks.list);
-        deferred.resolve(perks.list);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    perks.promise = initialize();
-
-    return perks;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('powers', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
-
-    var powers = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function chooseIcon(power) {
-
-      switch (power.source) {
-        case 'arms':
-          return 'battle-axe';
-        case 'elemental-magic':
-          return 'frostfire';
-        case 'shadow-arts':
-          return 'domino-mask';
-      }
-
-      return 'private';
-    }
-
-    function textToHtml(power) {
-
-      if (power.requirements) {
-        power.requirements = htmlifyer.textToHtml(power.requirements);
-      }
-
-      if (power.effect) {
-        power.effect = htmlifyer.textToHtml(power.effect);
-      }
-    }
-
-    function byId(id) {
-      return powers.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/powers',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        powers.list = result.data;
-        powers.list.forEach(function (p) {
-          p.icon = chooseIcon(p);
-          textToHtml(p);
-        });
-
-        console.log(powers.list);
-        deferred.resolve(powers.list);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    powers.promise = initialize();
-
-    return powers;
-  }]);
 })(angular.module('ndnd'));
 /*globals angular LZString _*/
 (function (ndnd) {
@@ -591,6 +408,192 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     return {
       dictionary: dictionary
     };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('effects', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
+
+    var _allEffects;
+    var effects = {
+      all: {},
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function textToHtml(obj) {
+      if (obj.description) {
+        obj.description = htmlifyer.textToHtml(obj.description);
+      }
+    }
+
+    function byId(id) {
+      return _allEffects.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/effects',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        _allEffects = [];
+        effects.all = result.data;
+
+        effects.all.boons.forEach(textToHtml);
+        effects.all.conditions.forEach(textToHtml);
+        effects.all.status.forEach(textToHtml);
+
+        _allEffects = _allEffects.concat(effects.all.boons);
+        _allEffects = _allEffects.concat(effects.all.conditions);
+        _allEffects = _allEffects.concat(effects.all.status);
+
+        _allEffects.forEach(function (e) {
+          return e.icon = 'effects/' + e.id;
+        });
+
+        effects.list = _allEffects;
+
+        deferred.resolve(effects.all);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    effects.promise = initialize();
+
+    return effects;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('perks', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
+
+    var perks = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function textToHtml(p) {
+
+      if (p.requirements) {
+        p.requirements = htmlifyer.textToHtml(p.requirements);
+      }
+
+      if (p.effect) {
+        p.effect = htmlifyer.textToHtml(p.effect);
+      }
+    }
+
+    function byId(id) {
+      return perks.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/perks',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        perks.list = result.data;
+        perks.list.forEach(textToHtml);
+        deferred.resolve(perks.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    perks.promise = initialize();
+
+    return perks;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('powers', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
+
+    var powers = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function chooseIcon(power) {
+
+      switch (power.source) {
+        case 'arms':
+          return 'battle-axe';
+        case 'elemental-magic':
+          return 'frostfire';
+        case 'shadow-arts':
+          return 'domino-mask';
+      }
+
+      return 'private';
+    }
+
+    function textToHtml(power) {
+
+      if (power.requirements) {
+        power.requirements = htmlifyer.textToHtml(power.requirements);
+      }
+
+      if (power.effect) {
+        power.effect = htmlifyer.textToHtml(power.effect);
+      }
+    }
+
+    function byId(id) {
+      return powers.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/powers',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        powers.list = result.data;
+        powers.list.forEach(function (p) {
+          p.icon = chooseIcon(p);
+          textToHtml(p);
+        });
+
+        deferred.resolve(powers.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    powers.promise = initialize();
+
+    return powers;
   }]);
 })(angular.module('ndnd'));
 /*globals angular _*/

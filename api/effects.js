@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var repo = require('../repository/effectsRepository');
+var repo = require('../google-repository/effectsRepository');
 
 var jsonSchema = {
   "type": "object",
