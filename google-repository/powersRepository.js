@@ -18,6 +18,8 @@ Promise.all([
     _powerList = _powerList.concat(powers);
   });
   
+  console.log('powers repository - loaded');
+  
 });
 
 function getAll() {

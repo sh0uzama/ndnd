@@ -1,0 +1,49 @@
+<md-toolbar layout="row" class="md-whiteframe-z1">
+  <div class="md-toolbar-tools" ng-include="'client/angular/ctrl/sheet/_toolbar.html'">
+    <!--ng-include="'client/angular/ctrl/sheet/_toolbar.html'"-->
+  </div>
+</md-toolbar>
+
+<md-content layout="column" flex>
+
+  <md-button ng-if="selectedTab==1" class="md-fab md-mini md-fab-bottom-right" aria-label="Add New Power" ng-click="ctrl.chooseNewPowers()">
+    <md-icon>add</md-icon>
+  </md-button>
+  <md-button ng-if="selectedTab==2" class="md-fab md-mini md-fab-bottom-right" aria-label="Add New Perk" ng-click="ctrl.chooseNewPerks()">
+    <md-icon>add</md-icon>
+  </md-button>
+
+  <md-tabs md-swipe-content="true" flex md-stretch-tabs md-border-bottom md-selected="selectedTab" md-enable-disconnect="true">
+    <md-tab>
+      <md-tab-label>
+        Status
+      </md-tab-label>
+      <md-tab-body>
+        <div class="character-sheet" ng-include="'client/angular/ctrl/sheet/_character.html'">
+          <!--ng-include="'client/angular/ctrl/sheet/_character.html'"-->
+        </div>
+      </md-tab-body>
+    </md-tab>
+    <md-tab>
+      <md-tab-label>
+        Powers
+      </md-tab-label>
+      <md-tab-body>
+        <div class="character-power-list" ng-include="'client/angular/ctrl/sheet/_powers.html'">
+          <!--ng-include="'client/angular/ctrl/sheet/_powers.html'"-->
+        </div>
+      </md-tab-body>
+    </md-tab>
+    <md-tab>
+      <md-tab-label>
+        Perks
+      </md-tab-label>
+      <md-tab-body>
+        <div class="character-perks" ng-include="'client/angular/ctrl/sheet/_perks.html'">
+          <!--ng-include="'client/angular/ctrl/sheet/_perks.html'"-->
+        </div>
+      </md-tab-body>
+    </md-tab>
+  </md-tabs>
+
+</md-content>

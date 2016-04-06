@@ -6,6 +6,7 @@ var _perkList = [];
 
 read.section('perks', 39).then(function(rows) {
   _perkList = utils.map(rows, ['id', 'name', 'effect']);
+  console.log('perks repository - loaded');
 });
 
 function getAll() {

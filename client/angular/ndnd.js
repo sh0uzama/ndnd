@@ -17,7 +17,7 @@
       
       $stateProvider.state('ndnd', {
         url: '/',
-        template: '<ui-view layout="row" flex></ui-view>',
+        templateUrl: 'client/angular/ctrl/root/rootTmpl.html',
         resolve: {
           _powers: function(powers) {
             return powers.promise;
@@ -33,8 +33,8 @@
       
       $stateProvider.state('ndnd.character', {
         url: 'character',
-        templateUrl: 'client/angular/ctrl/root/rootTmpl.html',
-        controller: 'rootCtrl',
+        templateUrl: 'client/angular/ctrl/sheet/sheetTmpl.html',
+        controller: 'sheetCtrl',
         controllerAs: 'ctrl'
       });
 

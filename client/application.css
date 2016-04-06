@@ -20,6 +20,9 @@ body {
 .toolbar-info {
   margin-right: 1em;
 }
+.toolbar-info:last-child {
+  margin-right: 0;
+}
 .power-card {
   height: 72px;
   position: relative;

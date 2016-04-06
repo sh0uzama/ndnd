@@ -13,7 +13,7 @@ var _loadInfo = new Promise(function(resolve, reject) {
     }
 
     _info = info;
-    console.log('doc: ' + info.title + ' by ' + info.author.email);
+    console.log('loaded repository: ' + info.title + ' by ' + info.author.email);
     resolve(info);
 
   });

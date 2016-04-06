@@ -1,4 +1,4 @@
-<md-card class="power-card" ng-class="{'expanded':power.expanded}" ng-repeat="power in ::ctrl.hero.powers">
+<md-card class="power-card" ng-class="{'expanded':power.expanded}" ng-repeat="power in ctrl.hero.powers">
   <md-card-header class="power-card-header" ng-click="power.expanded = !power.expanded" layout="row">
     <md-card-avatar>
       <img ng-src="client/icons/sources/{{::power.source}}.svg" />
