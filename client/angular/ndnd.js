@@ -18,6 +18,8 @@
       $stateProvider.state('ndnd', {
         url: '/',
         templateUrl: 'client/angular/ctrl/root/rootTmpl.html',
+        controller: 'rootCtrl',
+        abstract: true,
         resolve: {
           _powers: function(powers) {
             return powers.promise;

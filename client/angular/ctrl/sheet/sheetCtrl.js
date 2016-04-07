@@ -2,8 +2,8 @@
 (function(ndnd) {
 
   ndnd.controller('sheetCtrl', [
-    '$mdSidenav', '$mdDialog', '$mdToast', 'powers', 'effects', 'character', 'hint', 'key2label',
-    function($mdSidenav, $mdDialog, $mdToast, powers, effects, character, hint, key2label) {
+    '$mdDialog', '$mdToast', 'powers', 'effects', 'character', 'hint', 'key2label',
+    function($mdDialog, $mdToast, powers, effects, character, hint, key2label) {
 
       var ctrl = this;
 
@@ -11,11 +11,7 @@
       ctrl.effects = effects.all;
       ctrl.hero = character.hero;
       ctrl.dictionary = key2label.dictionary;
-
-      ctrl.toggleSidenav = function(id) {
-        $mdSidenav(id || 'left').toggle();
-      };
-
+      
       ctrl.chooseNewPowers = function($ev) {
         $mdDialog.show({
           controller: 'addNewPowerCtrl',
@@ -96,24 +92,14 @@
 
       ctrl.changeEffect = function(group, effect) {
 
-        var message;
-        var e = effects.byId(effect);
-
         if (ctrl.hero.effects[group][effect]) {
           delete ctrl.hero.effects[group][effect];
-          message = `Removed ${e.name}`;
         }
         else {
           ctrl.hero.effects[group][effect] = 1;
-          message = `Added ${e.name}`;
         }
 
         character.persist();
-
-        // var toast = $mdToast.simple().textContent(message);
-        // toast.position = 'top left';
-
-        // $mdToast.show(toast);
 
       };
 

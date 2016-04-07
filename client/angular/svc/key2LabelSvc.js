@@ -1,4 +1,4 @@
-/*globals angular LZString _*/
+/*globals angular */
 (function(ndnd) {
 
   ndnd.factory('key2label', [

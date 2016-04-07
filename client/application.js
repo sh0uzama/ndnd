@@ -47,6 +47,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     $stateProvider.state('ndnd', {
       url: '/',
       templateUrl: 'client/angular/ctrl/root/rootTmpl.html',
+      controller: 'rootCtrl',
+      abstract: true,
       resolve: {
         _powers: function _powers(powers) {
           return powers.promise;
@@ -76,35 +78,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 })();
 /*globals angular*/
 (function (ndnd) {
-
-  // ndnd.directive('compileHtml', [
-  //   '$compile',
-  //   function($compile) {
-  //     return function(scope, element, attrs) {
-  //       var ensureCompileRunsOnce = scope.$watch(
-  //         function(scope) {
-  //           // watch the 'compile' expression for changes
-  //           return scope.$eval(attrs.compile);
-  //         },
-  //         function(value) {
-  //           console.log(value);
-  //           // when the 'compile' expression changes
-  //           // assign it into the current DOM
-  //           element.html(value);
-
-  //           // compile the new DOM and link it to the current
-  //           // scope.
-  //           // NOTE: we only compile .childNodes so that
-  //           // we don't get into infinite loop compiling ourselves
-  //           $compile(element.contents())(scope);
-
-  //           // Use Angular's un-watch feature to ensure compilation only happens once.
-  //           ensureCompileRunsOnce();
-  //         }
-  //       );
-  //     };
-  //   }
-  // ]);
 
   ndnd.directive('compile', function ($compile) {
     // directive factory creates a link function
@@ -568,7 +541,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
-/*globals angular LZString _*/
+/*globals angular */
 (function (ndnd) {
 
   ndnd.factory('key2label', ['effects', 'powers', function (effects, powers) {
@@ -677,14 +650,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular */
 (function (ndnd) {
 
-  ndnd.controller('rootCtrl', ['$mdSidenav', function ($mdSidenav) {
-    var ctrl = this;
+  ndnd.controller('rootCtrl', ['$scope', '$mdSidenav', function ($scope, $mdSidenav) {
+
+    $scope.toggleSidenav = function () {
+      console.log('text');
+      $mdSidenav('left').toggle();
+    };
   }]);
 })(angular.module('ndnd'));
 /*globals angular _*/
 (function (ndnd) {
 
-  ndnd.controller('sheetCtrl', ['$mdSidenav', '$mdDialog', '$mdToast', 'powers', 'effects', 'character', 'hint', 'key2label', function ($mdSidenav, $mdDialog, $mdToast, powers, effects, character, hint, key2label) {
+  ndnd.controller('sheetCtrl', ['$mdDialog', '$mdToast', 'powers', 'effects', 'character', 'hint', 'key2label', function ($mdDialog, $mdToast, powers, effects, character, hint, key2label) {
 
     var ctrl = this;
 
@@ -692,10 +669,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.effects = effects.all;
     ctrl.hero = character.hero;
     ctrl.dictionary = key2label.dictionary;
-
-    ctrl.toggleSidenav = function (id) {
-      $mdSidenav(id || 'left').toggle();
-    };
 
     ctrl.chooseNewPowers = function ($ev) {
       $mdDialog.show({
@@ -761,23 +734,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     ctrl.changeEffect = function (group, effect) {
 
-      var message;
-      var e = effects.byId(effect);
-
       if (ctrl.hero.effects[group][effect]) {
         delete ctrl.hero.effects[group][effect];
-        message = 'Removed ' + e.name;
       } else {
         ctrl.hero.effects[group][effect] = 1;
-        message = 'Added ' + e.name;
       }
 
       character.persist();
-
-      // var toast = $mdToast.simple().textContent(message);
-      // toast.position = 'top left';
-
-      // $mdToast.show(toast);
     };
 
     ctrl.switchTurn = function () {
