@@ -41,14 +41,23 @@
         }
       });
 
-      $stateProvider.state('ndnd.character', {
-        url: 'character',
+      $stateProvider.state('ndnd.sheet', {
+        url: 'sheet',
         templateUrl: 'client/angular/ctrl/sheet/sheetTmpl.html',
         controller: 'sheetCtrl',
-        controllerAs: 'ctrl'
+        controllerAs: 'ctrl',
+        sectionClass: 'section-sheet'
       });
 
-      $urlRouterProvider.otherwise('/character');
+      $stateProvider.state('ndnd.profile', {
+        url: 'profile',
+        templateUrl: 'client/angular/ctrl/profile/profileTmpl.html',
+        controller: 'profileCtrl',
+        controllerAs: 'ctrl',
+        sectionClass: 'section-profile'
+      });
+
+      $urlRouterProvider.otherwise('/profile');
     }
   ]);
 
@@ -56,6 +65,15 @@
     'localStorageServiceProvider',
     function(localStorageServiceProvider) {
       localStorageServiceProvider.setPrefix('ndnd');
+    }
+  ]);
+
+  ndnd.run([
+    '$rootScope', '$state', '$stateParams',
+    function($rootScope, $state, $stateParams) {
+      // It's very handy to add references to $state and $stateParams to the $rootScope
+      $rootScope.$state = $state;
+      $rootScope.$stateParams = $stateParams;
     }
   ]);
 

@@ -1,0 +1,42 @@
+<md-toolbar layout="row" class="md-whiteframe-z1">
+  <div class="md-toolbar-tools" ng-include="'client/angular/ctrl/profile/_toolbar.html'">
+  </div>
+</md-toolbar>
+
+<md-content layout="column" flex>
+
+  <div layout="row" layout-padding class="profile-header">
+    <img ng-src="{{ctrl.profile.avatar}}" width="50" height="50" class="profile-avatar" />
+    <h2 class="profile-username">{{ctrl.profile.username}}</h2>
+  </div>
+
+  <md-toolbar layout="row" class="md-hue-3">
+    <div class="md-toolbar-tools">
+      <span>Your Heroes</span>
+    </div>
+  </md-toolbar>
+
+  <div layout="column" layout-padding class="profile-characters">
+
+    <h3 ng-if="!ctrl.heroes.length">You have no hero on this account</h3>
+
+    <md-list-item class="md-2-line" ng-repeat="hero in ctrl.heroes">
+      <md-icon ng-if="!hero.avatar" class="md-avatar-icon">person</md-icon>
+      <img ng-src="{{hero.avatar}}" class="md-avatar" alt="{{hero.name}}" ng-if="hero.avatar" />
+      <div class="md-list-item-text">
+        <h3> {{ hero.name }} </h3>
+        <p> {{ hero.primaryClass }}{{ hero.secondaryClass ? ' / ' + hero.secondaryClass : '' }} </p>
+      </div>
+      <md-button class="md-secondary md-icon-button" ng-click="ctrl.deleteHero(hero, $event)" aria-label="delete hero">
+        <md-icon>delete</md-icon>
+      </md-button>
+    </md-list-item>
+    </md-list>
+
+  </div>
+
+  <md-button class="md-fab md-mini md-fab-bottom-right" aria-label="add new hero" ng-click="ctrl.addNewHero()">
+    <md-icon>person_add</md-icon>
+  </md-button>
+
+</md-content>

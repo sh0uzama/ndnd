@@ -34,9 +34,7 @@ var jsonForm = [
 ];
 
 router.get('/', function(req, res) {
-
   res.json(repo.getAll());
-
 });
 
 router.get('/_meta', function(req, res) {

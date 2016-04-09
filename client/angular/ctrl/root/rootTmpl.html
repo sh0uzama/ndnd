@@ -8,6 +8,11 @@
 
 </md-sidenav>
 
-<div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2" ui-view>
+<div flex 
+  layout="column" 
+  tabIndex="-1" 
+  role="main" 
+  class="md-whiteframe-z2 {{$state.current.sectionClass}}" 
+  ui-view>
   <!-- ui-view -->
 </div>

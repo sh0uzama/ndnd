@@ -1,5 +1,7 @@
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 (function () {
@@ -78,18 +80,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     });
 
-    $stateProvider.state('ndnd.character', {
-      url: 'character',
+    $stateProvider.state('ndnd.sheet', {
+      url: 'sheet',
       templateUrl: 'client/angular/ctrl/sheet/sheetTmpl.html',
       controller: 'sheetCtrl',
-      controllerAs: 'ctrl'
+      controllerAs: 'ctrl',
+      sectionClass: 'section-sheet'
     });
 
-    $urlRouterProvider.otherwise('/character');
+    $stateProvider.state('ndnd.profile', {
+      url: 'profile',
+      templateUrl: 'client/angular/ctrl/profile/profileTmpl.html',
+      controller: 'profileCtrl',
+      controllerAs: 'ctrl',
+      sectionClass: 'section-profile'
+    });
+
+    $urlRouterProvider.otherwise('/profile');
   }]);
 
   ndnd.config(['localStorageServiceProvider', function (localStorageServiceProvider) {
     localStorageServiceProvider.setPrefix('ndnd');
+  }]);
+
+  ndnd.run(['$rootScope', '$state', '$stateParams', function ($rootScope, $state, $stateParams) {
+    // It's very handy to add references to $state and $stateParams to the $rootScope
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
   }]);
 })();
 /*globals angular*/
@@ -299,6 +316,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     powers.promise = initialize();
 
     return powers;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('api', ['$q', '$http', function ($q, $http) {
+
+    var _rootUrl = 'api';
+    var _get = function _get(url) {
+      return $http.get(_rootUrl + url);
+    };
+
+    var Api = function () {
+      function Api() {
+        _classCallCheck(this, Api);
+      }
+
+      _createClass(Api, [{
+        key: 'fetchProfile',
+        value: function fetchProfile() {
+          return _get('/profile');
+        }
+      }, {
+        key: 'fetchHeroes',
+        value: function fetchHeroes() {
+          return _get('/heroes');
+        }
+      }]);
+
+      return Api;
+    }();
+
+    var api = new Api();
+
+    return api;
   }]);
 })(angular.module('ndnd'));
 /*globals angular LZString _*/
@@ -666,7 +718,25 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular */
 (function (ndnd) {
 
-  ndnd.controller('rootCtrl', ['$scope', '$mdSidenav', function ($scope, $mdSidenav) {
+  ndnd.controller('profileCtrl', ['api', function (api) {
+
+    var ctrl = this;
+
+    ctrl.profile = null;
+    ctrl.heroes = [];
+
+    api.fetchProfile().then(function (r) {
+      return ctrl.profile = r.data;
+    });
+    api.fetchHeroes().then(function (r) {
+      return ctrl.heroes = r.data;
+    });
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('rootCtrl', ['$rootScope', '$scope', '$mdSidenav', function ($rootScope, $scope, $mdSidenav) {
 
     $scope.toggleSidenav = function () {
       console.log('text');

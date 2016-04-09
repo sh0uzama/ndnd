@@ -2,11 +2,10 @@
 (function(ndnd) {
 
   ndnd.controller('rootCtrl', [
-    '$scope','$mdSidenav',
-    function($scope, $mdSidenav) {
-      
+    '$rootScope', '$scope', '$mdSidenav',
+    function($rootScope, $scope, $mdSidenav) {
+
       $scope.toggleSidenav = function() {
-        console.log('text');
         $mdSidenav('left').toggle();
       };
       
