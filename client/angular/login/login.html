@@ -1,0 +1,26 @@
+<form layout="column" name="loginForm" action="/auth/login">
+
+  <md-input-container class="md-block">
+    <label>Username</label>
+    <input required name="username">
+    <div ng-messages="loginForm.username.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+
+  <md-input-container class="md-block">
+    <label>Password</label>
+    <input required name="password" type="password">
+    <div ng-messages="loginForm.password.$error">
+      <div ng-message="required">This is required.</div>
+    </div>
+  </md-input-container>
+
+  <md-button class="md-primary md-raised" type="submit">login</md-button>
+
+</form>
+
+<md-divider></md-divider>
+
+<a href="/auth/google" class="md-button md-raised">sign in with Google</a>
+  

@@ -7,7 +7,7 @@ function create(__helpers) {
       attr = __helpers.a;
 
   return function render(data, out) {
-    out.w("<!doctype html><meta charset=\"UTF-8\"><title>ndnd - login</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
+    out.w("<!doctype html><html lang=\"en\" ng-app=\"ndndLogin\" ng-cloak><head><meta charset=\"UTF-8\"><title>ndnd</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
 
     forEach(data.fonts, function(font) {
       out.w("<link rel=\"stylesheet\" media=\"all\"" +
@@ -29,7 +29,7 @@ function create(__helpers) {
         "></script>");
     });
 
-    out.w("<script src=\"client/application.js\"></script><form ng-app=\"LoginApp\" ng-cloak><div><label>username</label><input name=\"username\" type=\"text\"></div><div><label>password</label><input name=\"password\" type=\"password\"></div><button type=\"submit\">SUBMIT</button></form>");
+    out.w("<script src=\"client/application.js\"></script><script>window.history.pushState(\"\", document.title, window.location.pathname);</script></head><body layout=\"column\" layout-padding ng-include=\"&#39;client/angular/login/login.html&#39;\"></body></html>");
   };
 }
 

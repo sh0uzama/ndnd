@@ -32,7 +32,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /*globals angular*/
 (function () {
-  angular.module('LoginApp', ['ngMaterial']);
+  var ndndLogin = angular.module('ndndLogin', ['ngMaterial']);
+
+  // ndndLogin.config([
+  //   '$mdThemingProvider',
+  //   function($mdThemingProvider) {
+  //     $mdThemingProvider.theme('default')
+  //       .dark();
+  //   }
+  // ]);
 })();
 /*globals angular*/
 (function () {
@@ -40,6 +48,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var dependencies = ['ngSanitize', 'ngMaterial', 'ui.router', 'LocalStorageModule'];
 
   var ndnd = angular.module('ndnd', dependencies);
+
+  // ndnd.config([
+  //   '$mdThemingProvider',
+  //   function($mdThemingProvider) {
+  //     $mdThemingProvider.theme('default')
+  //       .dark();
+  //   }
+  // ]);
 
   ndnd.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
     //ROOT

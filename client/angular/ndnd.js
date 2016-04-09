@@ -10,11 +10,19 @@
 
   var ndnd = angular.module('ndnd', dependencies);
 
+  // ndnd.config([
+  //   '$mdThemingProvider',
+  //   function($mdThemingProvider) {
+  //     $mdThemingProvider.theme('default')
+  //       .dark();
+  //   }
+  // ]);
+
   ndnd.config([
     '$stateProvider', '$urlRouterProvider',
     function($stateProvider, $urlRouterProvider) {
       //ROOT
-      
+
       $stateProvider.state('ndnd', {
         url: '/',
         templateUrl: 'client/angular/ctrl/root/rootTmpl.html',
@@ -32,7 +40,7 @@
           }
         }
       });
-      
+
       $stateProvider.state('ndnd.character', {
         url: 'character',
         templateUrl: 'client/angular/ctrl/sheet/sheetTmpl.html',
