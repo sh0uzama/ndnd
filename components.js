@@ -14,6 +14,7 @@ var jsList = [
   cdnjs + versions.angular + "/angular-aria.min.js",
   cdnjs + versions.angular + "/angular-cookies.min.js",
   cdnjs + versions.angular + "/angular-sanitize.min.js",
+  cdnjs + versions.angular + "/angular-messages.min.js",
   //ANGULAR UI ROUTER
   cdnjs + "/angular-ui-router/0.2.18/angular-ui-router.min.js",
   cdnjs + "/ui-router-extras/0.1.2/ct-ui-router-extras.min.js",

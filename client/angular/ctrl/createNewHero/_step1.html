@@ -1,0 +1,43 @@
+<form name="ctrl.step1Form" layout="column" flex>
+
+  <md-content layout="column" flex layout-padding>
+    
+    <md-input-container class="md-block">
+      <label>Name</label>
+      <input md-maxlength="30" required name="name" ng-model="ctrl.hero.name">
+      <div ng-messages="ctrl.step1Form.name.$error">
+        <div ng-message="required">This is required.</div>
+      </div>
+    </md-input-container>
+
+    <md-input-container class="md-block">
+      <label>Primary Specialization</label>
+      <md-select ng-model="ctrl.hero.primarySpec" name="primarySpec" required ng-change="ctrl.specChange(1)">
+        <md-option ng-repeat="spec in ctrl.resources.specializations" value="{{spec.id}}">
+          {{spec.name}}
+        </md-option>
+      </md-select>
+      <div ng-messages="ctrl.step1Form.primarySpec.$error">
+        <div ng-message="required">This is required.</div>
+      </div>
+    </md-input-container>
+
+    <md-input-container class="md-block">
+      <label>Secondary Specialization</label>
+      <md-select ng-model="ctrl.hero.secondarySpec" ng-change="ctrl.specChange(2)">
+        <md-option ng-repeat="spec in ctrl.resources.specializations" value="{{spec.id}}">
+          {{spec.name}}
+        </md-option>
+      </md-select>
+    </md-input-container>
+    
+  </md-content>
+
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <span flex></span>
+      <md-button ng-disabled="ctrl.step1Form.$invalid" ng-click="ctrl.goToStep(2)">next</md-button>
+    </div>
+  </md-toolbar>
+
+</form>

@@ -8,11 +8,13 @@
 
       const _rootUrl = 'api';
       const _get = function(url) {
-        return $http.get(_rootUrl + url);
+        return $http.get(_rootUrl + url).then(function(response) {
+          return response.data;
+        });
       };
 
       class Api {
-        
+
         constructor() {}
 
         fetchProfile() {

@@ -32,6 +32,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   }
 })();
 
+(function () {
+
+  window.Models = window.Models || {};
+
+  var Hero = function Hero() {
+    _classCallCheck(this, Hero);
+
+    this.name = null;
+    this.primarySpec = null;
+    this.secondarySpec = null;
+    this.avatar = null;
+    this.attributes = {
+      strength: 0,
+      agility: 0,
+      willpower: 0,
+      toughness: 0
+    };
+    this.powers = [];
+    this.perks = [];
+  };
+
+  window.Models.Hero = Hero;
+})();
+
+/*
+
+{
+  userId: ObjectId,
+  name: String,
+  primarySpec: String,
+  secondarySpec: String,
+  avatar: String,
+  powers: [String],
+  perks: [String]
+}
+
+*/
 /*globals angular*/
 (function () {
   var ndndLogin = angular.module('ndndLogin', ['ngMaterial']);
@@ -47,7 +84,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function () {
 
-  var dependencies = ['ngSanitize', 'ngMaterial', 'ui.router', 'LocalStorageModule'];
+  var dependencies = ['ngSanitize', 'ngMessages', 'ngMaterial', 'ui.router', 'LocalStorageModule'];
 
   var ndnd = angular.module('ndnd', dependencies);
 
@@ -76,6 +113,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         },
         _perks: function _perks(perks) {
           return perks.promise;
+        },
+        _attributes: function _attributes(attributes) {
+          return attributes.promise;
+        },
+        _specializations: function _specializations(specializations) {
+          return specializations.promise;
         }
       }
     });
@@ -94,6 +137,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       controller: 'profileCtrl',
       controllerAs: 'ctrl',
       sectionClass: 'section-profile'
+    });
+
+    $stateProvider.state('ndnd.newhero', {
+      url: 'newhero',
+      templateUrl: 'client/angular/ctrl/createNewHero/createNewHeroTmpl.html',
+      controller: 'createNewHeroCtrl',
+      controllerAs: 'ctrl',
+      sectionClass: 'section-newhero'
     });
 
     $urlRouterProvider.otherwise('/profile');
@@ -131,6 +182,49 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     };
   });
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  var _attributes = [{
+    id: 'strength',
+    name: 'Strength'
+  }, {
+    id: 'agility',
+    name: 'Agility'
+  }, {
+    id: 'willpower',
+    name: 'Willpower'
+  }, {
+    id: 'toughness',
+    name: 'Toughness'
+  }];
+
+  ndnd.factory('attributes', ['$http', '$q', function ($http, $q) {
+
+    var attributes = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return attributes.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+      return $q.when(_attributes).then(function (result) {
+        attributes.list = result;
+        return result;
+      });
+    }
+
+    attributes.promise = initialize();
+
+    return attributes;
+  }]);
 })(angular.module('ndnd'));
 /*globals angular*/
 (function (ndnd) {
@@ -321,11 +415,53 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function (ndnd) {
 
+  var _specializations = [{
+    id: 'arms',
+    name: 'Arms'
+  }, {
+    id: 'shadow-arts',
+    name: 'Shadow Arts'
+  }, {
+    id: 'elemental-magic',
+    name: 'Elemental Magic'
+  }];
+
+  ndnd.factory('specializations', ['$http', '$q', function ($http, $q) {
+
+    var specializations = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return specializations.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+      return $q.when(_specializations).then(function (result) {
+        specializations.list = result;
+        return result;
+      });
+    }
+
+    specializations.promise = initialize();
+
+    return specializations;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
   ndnd.factory('api', ['$q', '$http', function ($q, $http) {
 
     var _rootUrl = 'api';
     var _get = function _get(url) {
-      return $http.get(_rootUrl + url);
+      return $http.get(_rootUrl + url).then(function (response) {
+        return response.data;
+      });
     };
 
     var Api = function () {
@@ -715,22 +851,78 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
+/*globals angular Models */
+(function (ndnd) {
+
+  var basePath = 'client/angular/ctrl/createNewHero/';
+
+  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'attributes', 'specializations', function ($timeout, api, attributes, specializations) {
+
+    var ctrl = this;
+    var hero = new Models.Hero();
+
+    ctrl.currentStepTemplate = basePath + '_step1.html';
+    ctrl.resources = {
+      attributes: attributes.list,
+      specializations: specializations.list
+    };
+    ctrl.hero = hero;
+
+    ctrl.specChange = specChange;
+    ctrl.goToStep = goToStep;
+    ctrl.changeAttribute = changeAttribute;
+
+    function specChange(idx) {
+
+      if (hero.primarySpec === hero.secondarySpec) {
+        if (idx === 1) {
+          hero.secondarySpec = null;
+        }
+        if (idx === 2) {
+          hero.primarySpec = null;
+        }
+      }
+    }
+
+    function goToStep(idx) {
+      ctrl.currentStepTemplate = basePath + '_step' + idx + '.html';
+    }
+
+    function changeAttribute(id, amount) {
+
+      ctrl.hero.attributes[id] += amount;
+
+      if (ctrl.hero.attributes[id] > 3) {
+        ctrl.hero.attributes[id] = 3;
+      }
+
+      if (ctrl.hero.attributes[id] < 0) {
+        ctrl.hero.attributes[id] = 0;
+      }
+    }
+  }]);
+})(angular.module('ndnd'));
 /*globals angular */
 (function (ndnd) {
 
-  ndnd.controller('profileCtrl', ['api', function (api) {
+  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
 
     var ctrl = this;
 
     ctrl.profile = null;
     ctrl.heroes = [];
+    ctrl.addNewHero = addNewHero;
 
-    api.fetchProfile().then(function (r) {
-      return ctrl.profile = r.data;
+    api.fetchProfile().then(function (data) {
+      return ctrl.profile = data;
     });
-    api.fetchHeroes().then(function (r) {
-      return ctrl.heroes = r.data;
+    api.fetchHeroes().then(function (data) {
+      return ctrl.heroes = data;
     });
+
+    function addNewHero() {
+      $state.go('ndnd.newhero');
+    }
   }]);
 })(angular.module('ndnd'));
 /*globals angular */
@@ -739,7 +931,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   ndnd.controller('rootCtrl', ['$rootScope', '$scope', '$mdSidenav', function ($rootScope, $scope, $mdSidenav) {
 
     $scope.toggleSidenav = function () {
-      console.log('text');
       $mdSidenav('left').toggle();
     };
   }]);

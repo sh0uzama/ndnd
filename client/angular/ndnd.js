@@ -3,6 +3,7 @@
 
   var dependencies = [
     'ngSanitize',
+    'ngMessages',
     'ngMaterial',
     'ui.router',
     'LocalStorageModule'
@@ -37,7 +38,13 @@
           },
           _perks: function(perks) {
             return perks.promise;
-          }
+          },
+          _attributes: function(attributes) {
+            return attributes.promise;
+          },
+          _specializations: function(specializations) {
+            return specializations.promise;
+          },
         }
       });
 
@@ -55,6 +62,14 @@
         controller: 'profileCtrl',
         controllerAs: 'ctrl',
         sectionClass: 'section-profile'
+      });
+
+      $stateProvider.state('ndnd.newhero', {
+        url: 'newhero',
+        templateUrl: 'client/angular/ctrl/createNewHero/createNewHeroTmpl.html',
+        controller: 'createNewHeroCtrl',
+        controllerAs: 'ctrl',
+        sectionClass: 'section-newhero'
       });
 
       $urlRouterProvider.otherwise('/profile');

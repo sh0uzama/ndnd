@@ -7,8 +7,14 @@ var objectName = "Hero";
 var schema = mongoose.Schema({
   userId: ObjectId,
   name: String,
-  primaryClass: String,
-  secondaryClass: String,
+  primarySpec: String,
+  secondarySpec: String,
+  attributes: {
+    strength: Number,
+    agility: Number,
+    willpower: Number,
+    toughness: Number
+  },
   avatar: String,
   powers: [String],
   perks: [String]

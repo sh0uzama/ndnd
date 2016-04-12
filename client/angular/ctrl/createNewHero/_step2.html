@@ -1,0 +1,22 @@
+<md-content layout="column" flex layout-padding>
+
+  <div layout="row" layout-align="end center" ng-repeat="attr in ctrl.resources.attributes">
+    <h3 flex>{{attr.name}}</h3>
+    <md-button class="md-fab md-primary" ng-click="ctrl.changeAttribute(attr.id, -1)">
+      <md-icon>remove</md-icon>
+    </md-button>
+    <div>{{ctrl.hero.attributes[attr.id]}}</div>
+    <md-button class="md-fab md-primary" ng-click="ctrl.changeAttribute(attr.id, 1)">
+      <md-icon>add</md-icon>
+    </md-button>
+  </div>
+
+</md-content>
+
+<md-toolbar>
+  <div class="md-toolbar-tools">
+    <md-button ng-click="ctrl.goToStep(1)">prev</md-button>
+    <span flex></span>
+    <md-button ng-click="ctrl.goToStep(3)">next</md-button>
+  </div>
+</md-toolbar>

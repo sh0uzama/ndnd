@@ -3,16 +3,21 @@
 
   ndnd.controller('profileCtrl', [
     
-    'api',
-    function(api) {
+    '$state','api',
+    function($state, api) {
       
       var ctrl = this;
       
       ctrl.profile = null;
       ctrl.heroes = [];
+      ctrl.addNewHero = addNewHero;
 
-      api.fetchProfile().then(r => ctrl.profile = r.data);
-      api.fetchHeroes().then(r => ctrl.heroes = r.data);
+      api.fetchProfile().then(data => ctrl.profile = data);
+      api.fetchHeroes().then(data => ctrl.heroes = data);
+      
+      function addNewHero() {
+        $state.go('ndnd.newhero');
+      }
       
     }
     
