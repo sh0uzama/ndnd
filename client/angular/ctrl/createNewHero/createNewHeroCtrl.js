@@ -5,8 +5,8 @@
 
   ndnd.controller('createNewHeroCtrl', [
 
-    '$timeout', 'api', 'attributes', 'specializations',
-    function($timeout, api, attributes, specializations) {
+    '$timeout', 'api', 'attributes', 'specializations', 'skills',
+    function($timeout, api, attributes, specializations, skills) {
 
       var ctrl = this;
       var hero = new Models.Hero();
@@ -14,13 +14,15 @@
       ctrl.currentStepTemplate = basePath + '_step1.html';
       ctrl.resources = {
         attributes: attributes.list,
-        specializations: specializations.list
+        specializations: specializations.list,
+        skills: skills.list
       };
       ctrl.hero = hero;
 
       ctrl.specChange = specChange;
       ctrl.goToStep = goToStep;
       ctrl.changeAttribute = changeAttribute;
+      ctrl.changeSkill = changeSkill;
 
       function specChange(idx) {
 
@@ -49,6 +51,19 @@
 
         if (ctrl.hero.attributes[id] < 0) {
           ctrl.hero.attributes[id] = 0;
+        }
+        
+      }
+      function changeSkill(id, amount) {
+        
+        ctrl.hero.skills[id] += amount;
+        
+        if (ctrl.hero.skills[id] > 3) {
+          ctrl.hero.skills[id] = 3;
+        }
+
+        if (ctrl.hero.skills[id] < -1) {
+          ctrl.hero.skills[id] = -1;
         }
         
       }

@@ -1,0 +1,23 @@
+<md-content layout="column" flex layout-padding>
+
+  <div layout="row" layout-align="end center" ng-repeat="skill in ctrl.resources.skills">
+    <h3 flex>{{skill.name}}</h3>
+    <md-button class="md-fab md-primary" ng-click="ctrl.changeSkill(skill.id, -1)">
+      <md-icon>remove</md-icon>
+    </md-button>
+    <div ng-if="ctrl.hero.skills[skill.id] === -1">X</div>
+    <div ng-if="ctrl.hero.skills[skill.id] > -1">{{ctrl.hero.skills[skill.id]}}</div>
+    <md-button class="md-fab md-primary" ng-click="ctrl.changeSkill(skill.id, 1)">
+      <md-icon>add</md-icon>
+    </md-button>
+  </div>
+
+</md-content>
+
+<md-toolbar>
+  <div class="md-toolbar-tools">
+    <md-button ng-click="ctrl.goToStep(2)">prev</md-button>
+    <span flex></span>
+    <md-button ng-click="ctrl.goToStep(4)">next</md-button>
+  </div>
+</md-toolbar>

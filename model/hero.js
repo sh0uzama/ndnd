@@ -15,6 +15,16 @@ var schema = mongoose.Schema({
     willpower: Number,
     toughness: Number
   },
+  skills: {
+    arcana: Number,
+    athletics: Number,
+    lore: Number,
+    perception: Number,
+    stealth: Number,
+    survival: Number,
+    thievery: Number,
+    wits: Number
+  },
   avatar: String,
   powers: [String],
   perks: [String]

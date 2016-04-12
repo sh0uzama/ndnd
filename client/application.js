@@ -49,6 +49,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       willpower: 0,
       toughness: 0
     };
+    this.skills = {
+      arcana: -1,
+      athletics: -1,
+      lore: -1,
+      perception: -1,
+      stealth: -1,
+      survival: -1,
+      thievery: -1,
+      wits: -1
+    };
     this.powers = [];
     this.perks = [];
   };
@@ -119,6 +129,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         },
         _specializations: function _specializations(specializations) {
           return specializations.promise;
+        },
+        _skills: function _skills(skills) {
+          return skills.promise;
         }
       }
     });
@@ -410,6 +423,61 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     powers.promise = initialize();
 
     return powers;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  var _skills = [{
+    id: 'arcana',
+    name: 'Arcana'
+  }, {
+    id: 'athletics',
+    name: 'Athletics'
+  }, {
+    id: 'lore',
+    name: 'Lore'
+  }, {
+    id: 'perception',
+    name: 'Perception'
+  }, {
+    id: 'stealth',
+    name: 'Stealth'
+  }, {
+    id: 'survival',
+    name: 'Survival'
+  }, {
+    id: 'thievery',
+    name: 'Thievery'
+  }, {
+    id: 'wits',
+    name: 'Wits'
+  }];
+
+  ndnd.factory('skills', ['$http', '$q', function ($http, $q) {
+
+    var skills = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return skills.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+      return $q.when(_skills).then(function (result) {
+        skills.list = result;
+        return result;
+      });
+    }
+
+    skills.promise = initialize();
+
+    return skills;
   }]);
 })(angular.module('ndnd'));
 /*globals angular*/
@@ -856,7 +924,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var basePath = 'client/angular/ctrl/createNewHero/';
 
-  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'attributes', 'specializations', function ($timeout, api, attributes, specializations) {
+  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'attributes', 'specializations', 'skills', function ($timeout, api, attributes, specializations, skills) {
 
     var ctrl = this;
     var hero = new Models.Hero();
@@ -864,13 +932,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.currentStepTemplate = basePath + '_step1.html';
     ctrl.resources = {
       attributes: attributes.list,
-      specializations: specializations.list
+      specializations: specializations.list,
+      skills: skills.list
     };
     ctrl.hero = hero;
 
     ctrl.specChange = specChange;
     ctrl.goToStep = goToStep;
     ctrl.changeAttribute = changeAttribute;
+    ctrl.changeSkill = changeSkill;
 
     function specChange(idx) {
 
@@ -900,28 +970,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         ctrl.hero.attributes[id] = 0;
       }
     }
-  }]);
-})(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
+    function changeSkill(id, amount) {
 
-  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
+      ctrl.hero.skills[id] += amount;
 
-    var ctrl = this;
+      if (ctrl.hero.skills[id] > 3) {
+        ctrl.hero.skills[id] = 3;
+      }
 
-    ctrl.profile = null;
-    ctrl.heroes = [];
-    ctrl.addNewHero = addNewHero;
-
-    api.fetchProfile().then(function (data) {
-      return ctrl.profile = data;
-    });
-    api.fetchHeroes().then(function (data) {
-      return ctrl.heroes = data;
-    });
-
-    function addNewHero() {
-      $state.go('ndnd.newhero');
+      if (ctrl.hero.skills[id] < -1) {
+        ctrl.hero.skills[id] = -1;
+      }
     }
   }]);
 })(angular.module('ndnd'));
@@ -1040,5 +1099,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.openHint = function (source, id) {
       hint.openHint(source, id);
     };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
+
+    var ctrl = this;
+
+    ctrl.profile = null;
+    ctrl.heroes = [];
+    ctrl.addNewHero = addNewHero;
+
+    api.fetchProfile().then(function (data) {
+      return ctrl.profile = data;
+    });
+    api.fetchHeroes().then(function (data) {
+      return ctrl.heroes = data;
+    });
+
+    function addNewHero() {
+      $state.go('ndnd.newhero');
+    }
   }]);
 })(angular.module('ndnd'));

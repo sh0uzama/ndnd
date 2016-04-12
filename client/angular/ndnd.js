@@ -45,6 +45,9 @@
           _specializations: function(specializations) {
             return specializations.promise;
           },
+          _skills: function(skills) {
+            return skills.promise;
+          }
         }
       });
 
