@@ -1,0 +1,108 @@
+@import '_palette';
+@import '_mixins';
+
+/*
+
+POWER CARD
+
+*/
+
+.power-card {
+  height: 72px;
+  position: relative;
+  overflow: hidden;
+  md-card-avatar {
+    margin-left: 0 !important;
+    outline: 0;
+  }
+  md-card-actions {
+    visibility: hidden;
+  }
+  .md-title {
+    font-weight: 600;
+  }
+  &:hover {
+    background-color: @pal-primary-light;
+  }
+  &.selected {
+    background-color: #DCEDC8;
+  }
+  &.expanded {
+    .md-title {
+      font-size: 20px;
+      line-height: 40px;
+    }
+    .md-subhead {
+      display: none;
+    }
+    height: auto;
+    md-card-actions {
+      visibility: visible;
+    }
+  }
+  .power-card-header {
+    outline: 0;
+  }
+  .power-card-badge {
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    &.energy {
+      background-color: yellow;
+    }
+    &.upkeep {
+      background-color: blue;
+    }
+  }
+  .power-card-description {
+    .card-line {
+      margin-bottom: 5px;
+      .card-line-title {
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 14px;
+      }
+      .card-line-text {
+        margin: 0;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+
+/*
+
+DIALOG HINT
+
+*/
+
+.dialog-hint {
+  .hint-icon {
+    padding: 5px;
+    background-color: white;
+    margin-right: 10px;
+    border-radius: 50%;
+    md-icon {
+      color: black;
+    }
+  }
+  .dialog-hint-content {
+    position: relative;
+    padding: 16px;
+    .hint-line {
+      margin-bottom: 5px;
+      .hint-line-title {
+        margin: 0;
+        text-transform: uppercase;
+        font-size: 14px;
+      }
+      .hint-line-text {
+        margin: 0;
+        font-size: 14px;
+      }
+    }
+  }
+}

@@ -696,6 +696,47 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.factory('dialogService', ['$mdDialog', function ($mdDialog) {
+
+    function choosePowersDialog($ev, powersToExclude) {
+      return $mdDialog.show({
+        controller: 'addNewPowerCtrl',
+        controllerAs: 'ctrl',
+        templateUrl: 'client/angular/ctrl/addNewPower/addNewPowerTmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: $ev,
+        clickOutsideToClose: true,
+        fullscreen: true,
+        locals: {
+          powersToExclude: powersToExclude
+        }
+      });
+    }
+
+    function choosePerksDialog($ev, perksToExclude) {
+      return $mdDialog.show({
+        controller: 'addNewPerkCtrl',
+        controllerAs: 'ctrl',
+        templateUrl: 'client/angular/ctrl/addNewPerk/addNewPerkTmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: $ev,
+        clickOutsideToClose: true,
+        fullscreen: true,
+        locals: {
+          perksToExclude: perksToExclude
+        }
+      });
+    }
+
+    return {
+      choosePowersDialog: choosePowersDialog,
+      choosePerksDialog: choosePerksDialog
+    };
+  }]);
+})(angular.module('ndnd'));
 /*globals angular LZString _*/
 (function (ndnd) {
   var HintHistoryEntry = function HintHistoryEntry(source, obj) {
@@ -798,7 +839,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         pieces.push(label);
       }
 
-      return '<a href="#" ng-click="ctrl.openHint(\'' + pieces[0] + '\',\'' + pieces[1] + '\')">' + pieces[2] + '</a>';
+      return '<a class="hint-link" ng-click="ctrl.openHint(\'' + pieces[0] + '\',\'' + pieces[1] + '\')">' + pieces[2] + '</a>';
     }
 
     function textToHtml(aString) {
@@ -841,106 +882,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
-/*globals angular _*/
-(function (ndnd) {
-
-  ndnd.controller('addNewPerkCtrl', ['$mdDialog', 'perks', 'character', function ($mdDialog, perks, character) {
-
-    var ctrl = this;
-
-    ctrl.hero = character.hero;
-
-    // filter out perks used by the hero
-    var filteredPerks = _.difference(perks.list, ctrl.hero.perks, function (p) {
-      return p.id;
-    });
-    ctrl.perks = angular.copy(filteredPerks);
-
-    ctrl.okEnabled = false;
-    ctrl.ok = function () {
-      var selectedPerks = ctrl.perks.filter(function (p) {
-        return p.selected;
-      });
-      selectedPerks.forEach(function (p) {
-        ctrl.hero.perks.unshift(perks.byId(p.id));
-      });
-      $mdDialog.hide();
-    };
-
-    ctrl.cancel = function () {
-      $mdDialog.hide();
-    };
-
-    ctrl.selectPerk = function (perk, $event) {
-      perk.selected = !perk.selected;
-      ctrl.okEnabled = ctrl.perks.some(function (p) {
-        return p.selected;
-      });
-      $event.stopPropagation();
-    };
-  }]);
-})(angular.module('ndnd'));
-/*globals angular _*/
-(function (ndnd) {
-
-  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'character', function ($mdDialog, powers, character) {
-
-    var ctrl = this;
-
-    ctrl.hero = character.hero;
-
-    // filter out powers used by the hero
-    var filteredPowers = _.difference(powers.list, ctrl.hero.powers, function (p) {
-      return p.id;
-    });
-    ctrl.powers = angular.copy(filteredPowers);
-
-    ctrl.okEnabled = false;
-    ctrl.ok = function () {
-      var selectedPowers = ctrl.powers.filter(function (p) {
-        return p.selected;
-      });
-      selectedPowers.forEach(function (p) {
-        ctrl.hero.powers.unshift(powers.byId(p.id));
-      });
-      $mdDialog.hide();
-    };
-
-    ctrl.cancel = function () {
-      $mdDialog.hide();
-    };
-
-    ctrl.selectPower = function (power, $event) {
-      power.selected = !power.selected;
-      ctrl.okEnabled = ctrl.powers.some(function (p) {
-        return p.selected;
-      });
-      $event.stopPropagation();
-    };
-  }]);
-})(angular.module('ndnd'));
-/*globals angular Models */
+/*globals angular Models _ */
 (function (ndnd) {
 
   var basePath = 'client/angular/ctrl/createNewHero/';
 
-  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'attributes', 'specializations', 'skills', function ($timeout, api, attributes, specializations, skills) {
+  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'attributes', 'specializations', 'skills', 'powers', 'perks', 'dialogService', function ($timeout, api, attributes, specializations, skills, powers, perks, dialogService) {
 
     var ctrl = this;
     var hero = new Models.Hero();
 
-    ctrl.currentStepTemplate = basePath + '_step1.html';
-    ctrl.resources = {
-      attributes: attributes.list,
-      specializations: specializations.list,
-      skills: skills.list
-    };
+    ctrl.currentStepTemplate = null;
     ctrl.hero = hero;
 
     ctrl.specChange = specChange;
     ctrl.goToStep = goToStep;
     ctrl.changeAttribute = changeAttribute;
     ctrl.changeSkill = changeSkill;
+    ctrl.chooseNewPowers = chooseNewPowers;
+    ctrl.removePower = removePower;
+    ctrl.chooseNewPerks = chooseNewPerks;
+    ctrl.removePerk = removePerk;
+
+    ctrl.resources = getResources();
+
+    goToStep(1);
+
+    function getResources() {
+      return {
+        attributes: attributes.list,
+        specializations: specializations.list,
+        skills: skills.list,
+        powers: powers.list,
+        perks: perks.list
+      };
+    }
 
     function specChange(idx) {
 
@@ -970,6 +946,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         ctrl.hero.attributes[id] = 0;
       }
     }
+
     function changeSkill(id, amount) {
 
       ctrl.hero.skills[id] += amount;
@@ -982,6 +959,87 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         ctrl.hero.skills[id] = -1;
       }
     }
+
+    function chooseNewPowers($ev) {
+
+      var alreadySelectedPowers = ctrl.hero.powers;
+      var notPertainingPowers = powers.list.filter(function (p) {
+        return p.source !== ctrl.hero.primarySpec && p.source !== ctrl.hero.secondarySpec;
+      });
+
+      dialogService.choosePowersDialog($ev, alreadySelectedPowers.concat(notPertainingPowers)).then(addPowers);
+
+      function addPowers(selectedPowers) {
+        if (selectedPowers && selectedPowers.length) {
+          selectedPowers.forEach(function (p) {
+            ctrl.hero.powers.unshift(powers.byId(p.id));
+          });
+        }
+      }
+    }
+
+    function removePower(power, $ev) {
+
+      var idx = _.indexOf(ctrl.hero.powers, power);
+      ctrl.hero.powers.splice(idx, 1);
+    }
+
+    function chooseNewPerks($ev) {
+
+      dialogService.choosePerksDialog($ev, angular.copy(ctrl.hero.perks)).then(addPerks);
+
+      function addPerks(selectedPerks) {
+        if (selectedPerks && selectedPerks.length) {
+          selectedPerks.forEach(function (p) {
+            ctrl.hero.perks.unshift(perks.byId(p.id));
+          });
+        }
+      }
+    };
+
+    function removePerk(perk, $ev) {
+
+      var idx = _.indexOf(ctrl.hero.perks, perk);
+      ctrl.hero.perk.splice(idx, 1);
+    }
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'powersToExclude', function ($mdDialog, powers, powersToExclude) {
+
+    var ctrl = this;
+
+    // filter out powers already selected
+    var filteredPowers = powers.list.filter(function (p) {
+      var found = powersToExclude.find(function (pte) {
+        return pte.id === p.id;
+      });
+      return !found;
+    });
+
+    ctrl.powers = angular.copy(filteredPowers);
+
+    ctrl.okEnabled = false;
+    ctrl.ok = function () {
+      var selectedPowers = ctrl.powers.filter(function (p) {
+        return p.selected;
+      });
+      $mdDialog.hide(selectedPowers);
+    };
+
+    ctrl.cancel = function () {
+      $mdDialog.cancel();
+    };
+
+    ctrl.selectPower = function (power, $event) {
+      power.selected = !power.selected;
+      ctrl.okEnabled = ctrl.powers.some(function (p) {
+        return p.selected;
+      });
+      $event.stopPropagation();
+    };
   }]);
 })(angular.module('ndnd'));
 /*globals angular */
@@ -994,10 +1052,71 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
+
+    var ctrl = this;
+
+    ctrl.profile = null;
+    ctrl.heroes = [];
+    ctrl.addNewHero = addNewHero;
+
+    api.fetchProfile().then(function (data) {
+      return ctrl.profile = data;
+    });
+    api.fetchHeroes().then(function (data) {
+      return ctrl.heroes = data;
+    });
+
+    function addNewHero() {
+      $state.go('ndnd.newhero');
+    }
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('addNewPerkCtrl', ['$mdDialog', 'perks', 'perksToExclude', function ($mdDialog, perks, perksToExclude) {
+
+    var ctrl = this;
+
+    // filter out perks used by the hero
+    var filteredPerks = perks.list.filter(function (p) {
+      var found = perksToExclude.find(function (pte) {
+        return pte.id === p.id;
+      });
+      return !found;
+    });
+
+    ctrl.perks = angular.copy(filteredPerks);
+
+    ctrl.okEnabled = false;
+    ctrl.ok = function () {
+      var selectedPerks = ctrl.perks.filter(function (p) {
+        return p.selected;
+      });
+      $mdDialog.hide(selectedPerks);
+    };
+
+    ctrl.cancel = function () {
+      $mdDialog.cancel();
+    };
+
+    ctrl.selectPerk = function (perk, $event) {
+      perk.selected = !perk.selected;
+      ctrl.okEnabled = ctrl.perks.some(function (p) {
+        return p.selected;
+      });
+      $event.stopPropagation();
+    };
+  }]);
+})(angular.module('ndnd'));
 /*globals angular _*/
 (function (ndnd) {
 
-  ndnd.controller('sheetCtrl', ['$mdDialog', '$mdToast', 'powers', 'effects', 'character', 'hint', 'key2label', function ($mdDialog, $mdToast, powers, effects, character, hint, key2label) {
+  ndnd.controller('sheetCtrl', ['$mdDialog', '$mdToast', 'powers', 'perks', 'effects', 'character', 'hint', 'key2label', 'dialogService', function ($mdDialog, $mdToast, powers, perks, effects, character, hint, key2label, dialogService) {
 
     var ctrl = this;
 
@@ -1007,31 +1126,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.dictionary = key2label.dictionary;
 
     ctrl.chooseNewPowers = function ($ev) {
-      $mdDialog.show({
-        controller: 'addNewPowerCtrl',
-        controllerAs: 'ctrl',
-        templateUrl: 'client/angular/ctrl/addNewPower/addNewPowerTmpl.html',
-        parent: angular.element(document.body),
-        targetEvent: $ev,
-        clickOutsideToClose: true,
-        fullscreen: true
-      }).then(function () {
-        character.persist();
-      });
+
+      dialogService.choosePowersDialog($ev, angular.copy(ctrl.hero.powers)).then(addPowersAndPersist);
+
+      function addPowersAndPersist(selectedPowers) {
+        if (selectedPowers && selectedPowers.length) {
+          selectedPowers.forEach(function (p) {
+            ctrl.hero.powers.unshift(powers.byId(p.id));
+          });
+          character.persist();
+        }
+      }
     };
 
     ctrl.chooseNewPerks = function ($ev) {
-      $mdDialog.show({
-        controller: 'addNewPerkCtrl',
-        controllerAs: 'ctrl',
-        templateUrl: 'client/angular/ctrl/addNewPerk/addNewPerkTmpl.html',
-        parent: angular.element(document.body),
-        targetEvent: $ev,
-        clickOutsideToClose: true,
-        fullscreen: true
-      }).then(function () {
-        character.persist();
-      });
+      dialogService.choosePerksDialog($ev, angular.copy(ctrl.hero.perks)).then(addPerksAndPersist);
+
+      function addPerksAndPersist(selectedPerks) {
+        if (selectedPerks && selectedPerks.length) {
+          selectedPerks.forEach(function (p) {
+            ctrl.hero.perks.unshift(perks.byId(p.id));
+          });
+          character.persist();
+        }
+      }
     };
 
     ctrl.removePower = function (power, $ev) {
@@ -1099,28 +1217,5 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.openHint = function (source, id) {
       hint.openHint(source, id);
     };
-  }]);
-})(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
-
-  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
-
-    var ctrl = this;
-
-    ctrl.profile = null;
-    ctrl.heroes = [];
-    ctrl.addNewHero = addNewHero;
-
-    api.fetchProfile().then(function (data) {
-      return ctrl.profile = data;
-    });
-    api.fetchHeroes().then(function (data) {
-      return ctrl.heroes = data;
-    });
-
-    function addNewHero() {
-      $state.go('ndnd.newhero');
-    }
   }]);
 })(angular.module('ndnd'));

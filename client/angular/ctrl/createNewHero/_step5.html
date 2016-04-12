@@ -1,6 +1,16 @@
-<md-content layout="column" flex layout-padding>
+<div layout="column" flex>
+  
+  <md-content>
+    
+    <md-card class="power-card" 
+             ng-class="{'expanded':perk.expanded}" 
+             ng-repeat="perk in ctrl.hero.perks"
+             ng-include="'client/angular/templates/_perk.html'">
+    </md-card>
 
-</md-content>
+  </md-content>
+
+</div>
 
 <md-toolbar>
   <div class="md-toolbar-tools">
@@ -10,6 +20,6 @@
   </div>
 </md-toolbar>
 
-<md-button class="md-fab md-mini md-fab-bottom-right" aria-label="Add New Perk" ng-click="ctrl.chooseNewPerks()">
+<md-button class="md-fab md-mini md-fab-bottom-right" style="margin-bottom: 45px;" aria-label="Add New Perk" ng-click="ctrl.chooseNewPerks()">
   <md-icon>add</md-icon>
 </md-button>

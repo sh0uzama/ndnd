@@ -2,8 +2,8 @@
 (function(ndnd) {
 
   ndnd.controller('sheetCtrl', [
-    '$mdDialog', '$mdToast', 'powers', 'effects', 'character', 'hint', 'key2label',
-    function($mdDialog, $mdToast, powers, effects, character, hint, key2label) {
+    '$mdDialog', '$mdToast', 'powers', 'perks', 'effects', 'character', 'hint', 'key2label', 'dialogService',
+    function($mdDialog, $mdToast, powers, perks, effects, character, hint, key2label, dialogService) {
 
       var ctrl = this;
 
@@ -11,33 +11,38 @@
       ctrl.effects = effects.all;
       ctrl.hero = character.hero;
       ctrl.dictionary = key2label.dictionary;
-      
+
       ctrl.chooseNewPowers = function($ev) {
-        $mdDialog.show({
-          controller: 'addNewPowerCtrl',
-          controllerAs: 'ctrl',
-          templateUrl: 'client/angular/ctrl/addNewPower/addNewPowerTmpl.html',
-          parent: angular.element(document.body),
-          targetEvent: $ev,
-          clickOutsideToClose: true,
-          fullscreen: true
-        }).then(function() {
-          character.persist();
-        });
+        
+        dialogService
+          .choosePowersDialog($ev, angular.copy(ctrl.hero.powers))
+          .then(addPowersAndPersist);
+
+        function addPowersAndPersist(selectedPowers) {
+          if (selectedPowers && selectedPowers.length) {
+            selectedPowers.forEach(p => {
+              ctrl.hero.powers.unshift(powers.byId(p.id));
+            });
+            character.persist();
+          }
+        }
+
       };
-      
+
       ctrl.chooseNewPerks = function($ev) {
-        $mdDialog.show({
-          controller: 'addNewPerkCtrl',
-          controllerAs: 'ctrl',
-          templateUrl: 'client/angular/ctrl/addNewPerk/addNewPerkTmpl.html',
-          parent: angular.element(document.body),
-          targetEvent: $ev,
-          clickOutsideToClose: true,
-          fullscreen: true
-        }).then(function() {
-          character.persist();
-        });
+        dialogService
+          .choosePerksDialog($ev, angular.copy(ctrl.hero.perks))
+          .then(addPerksAndPersist);
+
+        function addPerksAndPersist(selectedPerks) {
+          if (selectedPerks && selectedPerks.length) {
+            selectedPerks.forEach(p => {
+              ctrl.hero.perks.unshift(perks.byId(p.id));
+            });
+            character.persist();
+          }
+        }
+
       };
 
       ctrl.removePower = function(power, $ev) {
@@ -57,7 +62,7 @@
         });
 
       };
-      
+
       ctrl.removePerk = function(perk, $ev) {
 
         var confirm = $mdDialog.confirm()
@@ -75,9 +80,9 @@
         });
 
       };
-      
+
       ctrl.usePower = function(power, $evt) {
-        
+
       };
 
       ctrl.changeWounds = function(amount) {

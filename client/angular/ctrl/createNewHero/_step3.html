@@ -1,12 +1,12 @@
 <md-content layout="column" flex layout-padding>
 
   <div layout="row" layout-align="end center" ng-repeat="skill in ctrl.resources.skills">
-    <h3 flex>{{skill.name}}</h3>
+    <h3 flex ng-class="{'stat-untrained':(ctrl.hero.skills[skill.id] === -1)}">{{skill.name}}</h3>
     <md-button class="md-fab md-primary" ng-click="ctrl.changeSkill(skill.id, -1)">
       <md-icon>remove</md-icon>
     </md-button>
-    <div ng-if="ctrl.hero.skills[skill.id] === -1">X</div>
-    <div ng-if="ctrl.hero.skills[skill.id] > -1">{{ctrl.hero.skills[skill.id]}}</div>
+    <div ng-if="ctrl.hero.skills[skill.id] === -1" class="stat-number stat-untrained">X</div>
+    <div ng-if="ctrl.hero.skills[skill.id] > -1" class="stat-number">{{ctrl.hero.skills[skill.id]}}</div>
     <md-button class="md-fab md-primary" ng-click="ctrl.changeSkill(skill.id, 1)">
       <md-icon>add</md-icon>
     </md-button>

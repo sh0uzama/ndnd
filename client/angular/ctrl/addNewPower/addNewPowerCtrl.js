@@ -1,29 +1,28 @@
-/*globals angular _*/
+/*globals angular */
 (function(ndnd) {
 
   ndnd.controller('addNewPowerCtrl', [
-    '$mdDialog', 'powers', 'character',
-    function($mdDialog, powers, character) {
+    '$mdDialog', 'powers', 'powersToExclude',
+    function($mdDialog, powers, powersToExclude) {
 
       var ctrl = this;
 
-      ctrl.hero = character.hero;
-
-      // filter out powers used by the hero
-      var filteredPowers = _.difference(powers.list, ctrl.hero.powers, p => p.id);
+      // filter out powers already selected
+      var filteredPowers = powers.list.filter(function(p) {
+        const found = powersToExclude.find(pte => pte.id === p.id);
+        return !found;
+      });
+      
       ctrl.powers = angular.copy(filteredPowers);
 
       ctrl.okEnabled = false;
       ctrl.ok = function() {
         var selectedPowers = ctrl.powers.filter(p => p.selected);
-        selectedPowers.forEach(p => {
-          ctrl.hero.powers.unshift(powers.byId(p.id));
-        });
-        $mdDialog.hide();
+        $mdDialog.hide(selectedPowers);
       };
 
       ctrl.cancel = function() {
-        $mdDialog.hide();
+        $mdDialog.cancel();
       };
       
       ctrl.selectPower = function(power, $event) {

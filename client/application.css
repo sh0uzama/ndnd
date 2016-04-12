@@ -5,9 +5,110 @@
   width: 100%;
   height: 100%;
 }
+/*
+
+POWER CARD
+
+*/
+.power-card {
+  height: 72px;
+  position: relative;
+  overflow: hidden;
+}
+.power-card md-card-avatar {
+  margin-left: 0 !important;
+  outline: 0;
+}
+.power-card md-card-actions {
+  visibility: hidden;
+}
+.power-card .md-title {
+  font-weight: 600;
+}
+.power-card:hover {
+  background-color: #BBDEFB;
+}
+.power-card.selected {
+  background-color: #DCEDC8;
+}
+.power-card.expanded {
+  height: auto;
+}
+.power-card.expanded .md-title {
+  font-size: 20px;
+  line-height: 40px;
+}
+.power-card.expanded .md-subhead {
+  display: none;
+}
+.power-card.expanded md-card-actions {
+  visibility: visible;
+}
+.power-card .power-card-header {
+  outline: 0;
+}
+.power-card .power-card-badge {
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  text-align: center;
+}
+.power-card .power-card-badge.energy {
+  background-color: yellow;
+}
+.power-card .power-card-badge.upkeep {
+  background-color: blue;
+}
+.power-card .power-card-description .card-line {
+  margin-bottom: 5px;
+}
+.power-card .power-card-description .card-line .card-line-title {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.power-card .power-card-description .card-line .card-line-text {
+  margin: 0;
+  font-size: 14px;
+}
+/*
+
+DIALOG HINT
+
+*/
+.dialog-hint .hint-icon {
+  padding: 5px;
+  background-color: white;
+  margin-right: 10px;
+  border-radius: 50%;
+}
+.dialog-hint .hint-icon md-icon {
+  color: black;
+}
+.dialog-hint .dialog-hint-content {
+  position: relative;
+  padding: 16px;
+}
+.dialog-hint .dialog-hint-content .hint-line {
+  margin-bottom: 5px;
+}
+.dialog-hint .dialog-hint-content .hint-line .hint-line-title {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+.dialog-hint .dialog-hint-content .hint-line .hint-line-text {
+  margin: 0;
+  font-size: 14px;
+}
 body {
   max-width: 800px;
   margin: auto;
+}
+.hint-link {
+  color: #FF9800;
+  font-weight: bold;
 }
 .section-sheet .vanishing-fab.visible {
   transform: scale(1);
@@ -22,68 +123,6 @@ body {
 }
 .section-sheet .toolbar-info:last-child {
   margin-right: 0;
-}
-.section-sheet .power-card {
-  height: 72px;
-  position: relative;
-  overflow: hidden;
-}
-.section-sheet .power-card md-card-avatar {
-  margin-left: 0 !important;
-  outline: 0;
-}
-.section-sheet .power-card md-card-actions {
-  visibility: hidden;
-}
-.section-sheet .power-card .md-title {
-  font-weight: 600;
-}
-.section-sheet .power-card:hover {
-  background-color: #BBDEFB;
-}
-.section-sheet .power-card.selected {
-  background-color: #DCEDC8;
-}
-.section-sheet .power-card.expanded {
-  height: auto;
-}
-.section-sheet .power-card.expanded .md-title {
-  font-size: 20px;
-  line-height: 40px;
-}
-.section-sheet .power-card.expanded .md-subhead {
-  display: none;
-}
-.section-sheet .power-card.expanded md-card-actions {
-  visibility: visible;
-}
-.section-sheet .power-card .power-card-header {
-  outline: 0;
-}
-.section-sheet .power-card .power-card-badge {
-  height: 40px;
-  width: 40px;
-  line-height: 40px;
-  border-radius: 50%;
-  text-align: center;
-}
-.section-sheet .power-card .power-card-badge.energy {
-  background-color: yellow;
-}
-.section-sheet .power-card .power-card-badge.upkeep {
-  background-color: blue;
-}
-.section-sheet .power-card .power-card-description .card-line {
-  margin-bottom: 5px;
-}
-.section-sheet .power-card .power-card-description .card-line .card-line-title {
-  margin: 0;
-  text-transform: uppercase;
-  font-size: 14px;
-}
-.section-sheet .power-card .power-card-description .card-line .card-line-text {
-  margin: 0;
-  font-size: 14px;
 }
 .section-sheet .character-power-list .power-card:last-child {
   margin-bottom: 100px;
@@ -147,31 +186,6 @@ body {
   font-size: 8px;
   text-align: center;
 }
-.section-sheet .dialog-hint .hint-icon {
-  padding: 5px;
-  background-color: white;
-  margin-right: 10px;
-  border-radius: 50%;
-}
-.section-sheet .dialog-hint .hint-icon md-icon {
-  color: black;
-}
-.section-sheet .dialog-hint .dialog-hint-content {
-  position: relative;
-  padding: 16px;
-}
-.section-sheet .dialog-hint .dialog-hint-content .hint-line {
-  margin-bottom: 5px;
-}
-.section-sheet .dialog-hint .dialog-hint-content .hint-line .hint-line-title {
-  margin: 0;
-  text-transform: uppercase;
-  font-size: 14px;
-}
-.section-sheet .dialog-hint .dialog-hint-content .hint-line .hint-line-text {
-  margin: 0;
-  font-size: 14px;
-}
 .section-sheet .character-stats {
   padding: 8px;
 }
@@ -181,4 +195,17 @@ body {
 .section-profile .profile-header .profile-username {
   margin: 0;
   padding: 18px 8px;
+}
+.section-newhero .stat-number {
+  font-family: monospace;
+  font-size: 24px;
+  border-radius: 50%;
+  height: 56px;
+  width: 56px;
+  line-height: 56px;
+  font-weight: 600;
+  text-align: center;
+}
+.section-newhero .stat-untrained {
+  color: #B6B6B6;
 }

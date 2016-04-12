@@ -19,7 +19,7 @@
           pieces.push(label);
         }
 
-        return `<a href="#" ng-click="ctrl.openHint('${pieces[0]}','${pieces[1]}')">${pieces[2]}</a>`;
+        return `<a class="hint-link" ng-click="ctrl.openHint('${pieces[0]}','${pieces[1]}')">${pieces[2]}</a>`;
       }
 
       function textToHtml(aString) {
