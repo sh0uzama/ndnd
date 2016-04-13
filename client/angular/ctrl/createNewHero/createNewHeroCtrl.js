@@ -5,8 +5,8 @@
 
   ndnd.controller('createNewHeroCtrl', [
 
-    '$timeout', 'api', 'attributes', 'specializations', 'skills', 'powers', 'perks', 'dialogService',
-    function($timeout, api, attributes, specializations, skills, powers, perks, dialogService) {
+    '$timeout', 'api', 'resources', 'dialogService', 'hint',
+    function($timeout, api, resources, dialogService, hint) {
 
       var ctrl = this;
       var hero = new Models.Hero();
@@ -23,17 +23,20 @@
       ctrl.chooseNewPerks = chooseNewPerks;
       ctrl.removePerk = removePerk;
 
+      ctrl.openHint = openHint;
+
       ctrl.resources = getResources();
 
       goToStep(1);
 
       function getResources() {
         return {
-          attributes: attributes.list,
-          specializations: specializations.list,
-          skills: skills.list,
-          powers: powers.list,
-          perks: perks.list
+          attributes: resources.attributes.list,
+          specializations: resources.specializations.list,
+          skills: resources.skills.list,
+          powers: resources.powers.list,
+          perks: resources.perks.list,
+          energies: resources.energies.list
         };
       }
 
@@ -85,7 +88,7 @@
       function chooseNewPowers($ev) {
 
         var alreadySelectedPowers = ctrl.hero.powers;
-        var notPertainingPowers = powers.list.filter(p => p.source !== ctrl.hero.primarySpec && p.source !== ctrl.hero.secondarySpec);
+        var notPertainingPowers = resources.powers.list.filter(p => p.source !== ctrl.hero.primarySpec && p.source !== ctrl.hero.secondarySpec);
 
         dialogService
           .choosePowersDialog($ev, alreadySelectedPowers.concat(notPertainingPowers))
@@ -94,7 +97,7 @@
         function addPowers(selectedPowers) {
           if (selectedPowers && selectedPowers.length) {
             selectedPowers.forEach(p => {
-              ctrl.hero.powers.unshift(powers.byId(p.id));
+              ctrl.hero.powers.unshift(resources.powers.byId(p.id));
             });
           }
         }
@@ -117,18 +120,22 @@
         function addPerks(selectedPerks) {
           if (selectedPerks && selectedPerks.length) {
             selectedPerks.forEach(p => {
-              ctrl.hero.perks.unshift(perks.byId(p.id));
+              ctrl.hero.perks.unshift(resources.perks.byId(p.id));
             });
           }
         }
 
-      };
+      }
 
       function removePerk(perk, $ev) {
 
         var idx = _.indexOf(ctrl.hero.perks, perk);
         ctrl.hero.perk.splice(idx, 1);
 
+      }
+
+      function openHint(source, id) {
+        hint.openHint(source, id);
       }
 
     }

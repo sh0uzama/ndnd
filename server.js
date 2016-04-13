@@ -55,6 +55,7 @@ app.all('/api/*', requireAuthentication);
 app.use('/api/powers', require('./api/powers'));
 app.use('/api/perks', require('./api/perks'));
 app.use('/api/effects', require('./api/effects'));
+app.use('/api/equipments', require('./api/equipments'));
 app.use('/api/profile', require('./api/profile'));
 app.use('/api/heroes', require('./api/heroes'));
 

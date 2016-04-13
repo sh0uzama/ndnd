@@ -1,4 +1,5 @@
 <md-dialog aria-label="Select New Perk(s)" ng-cloak>
+  
   <md-toolbar class="md-accent">
     <div class="md-toolbar-tools">
       <md-button class="md-icon-button" ng-click="ctrl.cancel()">
@@ -11,6 +12,7 @@
       </md-button>
     </div>
   </md-toolbar>
+  
   <md-dialog-content>
 
     <md-card class="power-card" ng-class="{'expanded':perk.expanded, 'selected':perk.selected}" ng-repeat="perk in ::ctrl.perks">
@@ -26,9 +28,9 @@
       <md-card-content class="power-card-description" ng-if="perk.expanded">
         <div class="card-line" ng-if="::perk.requirements">
           <h5 class="card-line-title">Requirements</h5>
-          <p class="card-line-text" ng-bind-html="::perk.requirements"></p>
+          <p class="card-line-text" compile="::perk.requirements"></p>
         </div>
-        <div class="card-full-text" ng-bind-html="::perk.effect"></div>
+        <div class="card-full-text" compile="::perk.effect"></div>
       </md-card-content>
     </md-card>
 

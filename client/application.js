@@ -132,6 +132,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         },
         _skills: function _skills(skills) {
           return skills.promise;
+        },
+        _energies: function _energies(energies) {
+          return energies.promise;
+        },
+        _resources: function _resources(resources) {
+          return resources.promise;
         }
       }
     });
@@ -176,6 +182,46 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function (ndnd) {
 
+  ndnd.factory('resources', ['$q', 'attributes', 'effects', 'energies', 'equipments', 'perks', 'powers', 'skills', 'specializations', function ($q, attributes, effects, energies, equipments, perks, powers, skills, specializations) {
+
+    var promises = [attributes.promise, effects.promise, energies.promise, equipments.promise, perks.promise, powers.promise, skills.promise, specializations.promise];
+
+    var resources = {
+
+      attributes: null,
+      effects: null,
+      energies: null,
+      equipments: null,
+      perks: null,
+      powers: null,
+      skills: null,
+      specializations: null,
+
+      promise: null
+
+    };
+
+    function initialize() {
+      return $q.all(promises).then(function () {
+        resources.attributes = attributes;
+        resources.effects = effects;
+        resources.energies = energies;
+        resources.equipments = equipments;
+        resources.perks = perks;
+        resources.powers = powers;
+        resources.skills = skills;
+        resources.specializations = specializations;
+      });
+    }
+
+    resources.promise = initialize();
+
+    return resources;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
   ndnd.directive('compile', function ($compile) {
     // directive factory creates a link function
     return function (scope, element, attrs) {
@@ -195,330 +241,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     };
   });
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  var _attributes = [{
-    id: 'strength',
-    name: 'Strength'
-  }, {
-    id: 'agility',
-    name: 'Agility'
-  }, {
-    id: 'willpower',
-    name: 'Willpower'
-  }, {
-    id: 'toughness',
-    name: 'Toughness'
-  }];
-
-  ndnd.factory('attributes', ['$http', '$q', function ($http, $q) {
-
-    var attributes = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function byId(id) {
-      return attributes.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-      return $q.when(_attributes).then(function (result) {
-        attributes.list = result;
-        return result;
-      });
-    }
-
-    attributes.promise = initialize();
-
-    return attributes;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('effects', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
-
-    var _allEffects;
-    var effects = {
-      all: {},
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function textToHtml(obj) {
-      if (obj.description) {
-        obj.description = htmlifyer.textToHtml(obj.description);
-      }
-    }
-
-    function byId(id) {
-      return _allEffects.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/effects',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        _allEffects = [];
-        effects.all = result.data;
-
-        effects.all.boons.forEach(textToHtml);
-        effects.all.conditions.forEach(textToHtml);
-        effects.all.status.forEach(textToHtml);
-
-        _allEffects = _allEffects.concat(effects.all.boons);
-        _allEffects = _allEffects.concat(effects.all.conditions);
-        _allEffects = _allEffects.concat(effects.all.status);
-
-        _allEffects.forEach(function (e) {
-          return e.icon = 'effects/' + e.id;
-        });
-
-        effects.list = _allEffects;
-
-        deferred.resolve(effects.all);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    effects.promise = initialize();
-
-    return effects;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('perks', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
-
-    var perks = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function textToHtml(p) {
-
-      if (p.requirements) {
-        p.requirements = htmlifyer.textToHtml(p.requirements);
-      }
-
-      if (p.effect) {
-        p.effect = htmlifyer.textToHtml(p.effect);
-      }
-    }
-
-    function byId(id) {
-      return perks.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/perks',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        perks.list = result.data;
-        perks.list.forEach(textToHtml);
-        deferred.resolve(perks.list);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    perks.promise = initialize();
-
-    return perks;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('powers', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
-
-    var powers = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function chooseIcon(power) {
-
-      switch (power.source) {
-        case 'arms':
-          return 'battle-axe';
-        case 'elemental-magic':
-          return 'frostfire';
-        case 'shadow-arts':
-          return 'domino-mask';
-      }
-
-      return 'private';
-    }
-
-    function textToHtml(power) {
-
-      if (power.requirements) {
-        power.requirements = htmlifyer.textToHtml(power.requirements);
-      }
-
-      if (power.effect) {
-        power.effect = htmlifyer.textToHtml(power.effect);
-      }
-    }
-
-    function byId(id) {
-      return powers.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/powers',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        powers.list = result.data;
-        powers.list.forEach(function (p) {
-          p.icon = chooseIcon(p);
-          textToHtml(p);
-        });
-
-        deferred.resolve(powers.list);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    powers.promise = initialize();
-
-    return powers;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  var _skills = [{
-    id: 'arcana',
-    name: 'Arcana'
-  }, {
-    id: 'athletics',
-    name: 'Athletics'
-  }, {
-    id: 'lore',
-    name: 'Lore'
-  }, {
-    id: 'perception',
-    name: 'Perception'
-  }, {
-    id: 'stealth',
-    name: 'Stealth'
-  }, {
-    id: 'survival',
-    name: 'Survival'
-  }, {
-    id: 'thievery',
-    name: 'Thievery'
-  }, {
-    id: 'wits',
-    name: 'Wits'
-  }];
-
-  ndnd.factory('skills', ['$http', '$q', function ($http, $q) {
-
-    var skills = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function byId(id) {
-      return skills.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-      return $q.when(_skills).then(function (result) {
-        skills.list = result;
-        return result;
-      });
-    }
-
-    skills.promise = initialize();
-
-    return skills;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  var _specializations = [{
-    id: 'arms',
-    name: 'Arms'
-  }, {
-    id: 'shadow-arts',
-    name: 'Shadow Arts'
-  }, {
-    id: 'elemental-magic',
-    name: 'Elemental Magic'
-  }];
-
-  ndnd.factory('specializations', ['$http', '$q', function ($http, $q) {
-
-    var specializations = {
-      list: [],
-      promise: null,
-      byId: byId
-    };
-
-    function byId(id) {
-      return specializations.list.find(function (p) {
-        return p.id === id;
-      });
-    }
-
-    function initialize() {
-      return $q.when(_specializations).then(function (result) {
-        specializations.list = result;
-        return result;
-      });
-    }
-
-    specializations.promise = initialize();
-
-    return specializations;
-  }]);
 })(angular.module('ndnd'));
 /*globals angular*/
 (function (ndnd) {
@@ -882,12 +604,477 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  var _attributes = [{
+    id: 'strength',
+    name: 'Strength'
+  }, {
+    id: 'agility',
+    name: 'Agility'
+  }, {
+    id: 'willpower',
+    name: 'Willpower'
+  }, {
+    id: 'toughness',
+    name: 'Toughness'
+  }];
+
+  ndnd.factory('attributes', ['$http', '$q', function ($http, $q) {
+
+    var attributes = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return attributes.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+      return $q.when(_attributes).then(function (result) {
+        attributes.list = result;
+        return result;
+      });
+    }
+
+    attributes.promise = initialize();
+
+    return attributes;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('effects', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
+
+    var _allEffects;
+    var effects = {
+      all: {},
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function textToHtml(obj) {
+      if (obj.description) {
+        obj.description = htmlifyer.textToHtml(obj.description);
+      }
+    }
+
+    function byId(id) {
+      return _allEffects.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/effects',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        _allEffects = [];
+        effects.all = result.data;
+
+        effects.all.boons.forEach(textToHtml);
+        effects.all.conditions.forEach(textToHtml);
+        effects.all.status.forEach(textToHtml);
+
+        _allEffects = _allEffects.concat(effects.all.boons);
+        _allEffects = _allEffects.concat(effects.all.conditions);
+        _allEffects = _allEffects.concat(effects.all.status);
+
+        _allEffects.forEach(function (e) {
+          return e.icon = 'effects/' + e.id;
+        });
+
+        effects.list = _allEffects;
+
+        deferred.resolve(effects.all);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    effects.promise = initialize();
+
+    return effects;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  var _energy = [{
+    id: 'adrenaline',
+    name: 'Adrenaline'
+  }, {
+    id: 'initiative',
+    name: 'Initiative'
+  }, {
+    id: 'focus',
+    name: 'Focus'
+  }];
+
+  ndnd.factory('energies', ['$http', '$q', function ($http, $q) {
+
+    var energies = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return energies.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+      return $q.when(_energy).then(function (result) {
+        energies.list = result;
+        return result;
+      });
+    }
+
+    energies.promise = initialize();
+
+    return energies;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('equipments', ['$http', '$q', function ($http, $q) {
+
+    var equipments = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return equipments.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/equipments',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        equipments.list = result.data;
+        deferred.resolve(equipments.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    equipments.promise = initialize();
+
+    return equipments;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('perks', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
+
+    var perks = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function textToHtml(p) {
+
+      if (p.requirements) {
+        p.requirements = htmlifyer.textToHtml(p.requirements);
+      }
+
+      if (p.effect) {
+        p.effect = htmlifyer.textToHtml(p.effect);
+      }
+    }
+
+    function byId(id) {
+      return perks.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/perks',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        perks.list = result.data;
+        perks.list.forEach(textToHtml);
+        deferred.resolve(perks.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    perks.promise = initialize();
+
+    return perks;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('powers', ['$http', '$q', 'htmlifyer', function ($http, $q, htmlifyer) {
+
+    var powers = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function chooseIcon(power) {
+
+      switch (power.source) {
+        case 'arms':
+          return 'battle-axe';
+        case 'elemental-magic':
+          return 'frostfire';
+        case 'shadow-arts':
+          return 'domino-mask';
+      }
+
+      return 'private';
+    }
+
+    function textToHtml(power) {
+
+      if (power.requirements) {
+        power.requirements = htmlifyer.textToHtml(power.requirements);
+      }
+
+      if (power.effect) {
+        power.effect = htmlifyer.textToHtml(power.effect);
+      }
+    }
+
+    function byId(id) {
+      return powers.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/powers',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        powers.list = result.data;
+        powers.list.forEach(function (p) {
+          p.icon = chooseIcon(p);
+          textToHtml(p);
+        });
+
+        deferred.resolve(powers.list);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    powers.promise = initialize();
+
+    return powers;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  var _skills = [{
+    id: 'arcana',
+    name: 'Arcana'
+  }, {
+    id: 'athletics',
+    name: 'Athletics'
+  }, {
+    id: 'lore',
+    name: 'Lore'
+  }, {
+    id: 'perception',
+    name: 'Perception'
+  }, {
+    id: 'stealth',
+    name: 'Stealth'
+  }, {
+    id: 'survival',
+    name: 'Survival'
+  }, {
+    id: 'thievery',
+    name: 'Thievery'
+  }, {
+    id: 'wits',
+    name: 'Wits'
+  }];
+
+  ndnd.factory('skills', ['$http', '$q', function ($http, $q) {
+
+    var skills = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return skills.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+      return $q.when(_skills).then(function (result) {
+        skills.list = result;
+        return result;
+      });
+    }
+
+    skills.promise = initialize();
+
+    return skills;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  var _specializations = [{
+    id: 'arms',
+    name: 'Arms'
+  }, {
+    id: 'shadow-arts',
+    name: 'Shadow Arts'
+  }, {
+    id: 'elemental-magic',
+    name: 'Elemental Magic'
+  }];
+
+  ndnd.factory('specializations', ['$http', '$q', function ($http, $q) {
+
+    var specializations = {
+      list: [],
+      promise: null,
+      byId: byId
+    };
+
+    function byId(id) {
+      return specializations.list.find(function (p) {
+        return p.id === id;
+      });
+    }
+
+    function initialize() {
+      return $q.when(_specializations).then(function (result) {
+        specializations.list = result;
+        return result;
+      });
+    }
+
+    specializations.promise = initialize();
+
+    return specializations;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('addNewPerkCtrl', ['$mdDialog', 'perks', 'perksToExclude', function ($mdDialog, perks, perksToExclude) {
+
+    var ctrl = this;
+
+    // filter out perks used by the hero
+    var filteredPerks = perks.list.filter(function (p) {
+      var found = perksToExclude.find(function (pte) {
+        return pte.id === p.id;
+      });
+      return !found;
+    });
+
+    ctrl.perks = angular.copy(filteredPerks);
+
+    ctrl.okEnabled = false;
+    ctrl.ok = function () {
+      var selectedPerks = ctrl.perks.filter(function (p) {
+        return p.selected;
+      });
+      $mdDialog.hide(selectedPerks);
+    };
+
+    ctrl.cancel = function () {
+      $mdDialog.cancel();
+    };
+
+    ctrl.selectPerk = function (perk, $event) {
+      perk.selected = !perk.selected;
+      ctrl.okEnabled = ctrl.perks.some(function (p) {
+        return p.selected;
+      });
+      $event.stopPropagation();
+    };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
+
+    var ctrl = this;
+
+    ctrl.profile = null;
+    ctrl.heroes = [];
+    ctrl.addNewHero = addNewHero;
+
+    api.fetchProfile().then(function (data) {
+      return ctrl.profile = data;
+    });
+    api.fetchHeroes().then(function (data) {
+      return ctrl.heroes = data;
+    });
+
+    function addNewHero() {
+      $state.go('ndnd.newhero');
+    }
+  }]);
+})(angular.module('ndnd'));
 /*globals angular Models _ */
 (function (ndnd) {
 
   var basePath = 'client/angular/ctrl/createNewHero/';
 
-  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'attributes', 'specializations', 'skills', 'powers', 'perks', 'dialogService', function ($timeout, api, attributes, specializations, skills, powers, perks, dialogService) {
+  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'resources', 'dialogService', 'hint', function ($timeout, api, resources, dialogService, hint) {
 
     var ctrl = this;
     var hero = new Models.Hero();
@@ -904,17 +1091,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.chooseNewPerks = chooseNewPerks;
     ctrl.removePerk = removePerk;
 
+    ctrl.openHint = openHint;
+
     ctrl.resources = getResources();
 
     goToStep(1);
 
     function getResources() {
       return {
-        attributes: attributes.list,
-        specializations: specializations.list,
-        skills: skills.list,
-        powers: powers.list,
-        perks: perks.list
+        attributes: resources.attributes.list,
+        specializations: resources.specializations.list,
+        skills: resources.skills.list,
+        powers: resources.powers.list,
+        perks: resources.perks.list,
+        energies: resources.energies.list
       };
     }
 
@@ -963,7 +1153,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     function chooseNewPowers($ev) {
 
       var alreadySelectedPowers = ctrl.hero.powers;
-      var notPertainingPowers = powers.list.filter(function (p) {
+      var notPertainingPowers = resources.powers.list.filter(function (p) {
         return p.source !== ctrl.hero.primarySpec && p.source !== ctrl.hero.secondarySpec;
       });
 
@@ -972,7 +1162,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       function addPowers(selectedPowers) {
         if (selectedPowers && selectedPowers.length) {
           selectedPowers.forEach(function (p) {
-            ctrl.hero.powers.unshift(powers.byId(p.id));
+            ctrl.hero.powers.unshift(resources.powers.byId(p.id));
           });
         }
       }
@@ -991,126 +1181,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       function addPerks(selectedPerks) {
         if (selectedPerks && selectedPerks.length) {
           selectedPerks.forEach(function (p) {
-            ctrl.hero.perks.unshift(perks.byId(p.id));
+            ctrl.hero.perks.unshift(resources.perks.byId(p.id));
           });
         }
       }
-    };
+    }
 
     function removePerk(perk, $ev) {
 
       var idx = _.indexOf(ctrl.hero.perks, perk);
       ctrl.hero.perk.splice(idx, 1);
     }
-  }]);
-})(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
 
-  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'powersToExclude', function ($mdDialog, powers, powersToExclude) {
-
-    var ctrl = this;
-
-    // filter out powers already selected
-    var filteredPowers = powers.list.filter(function (p) {
-      var found = powersToExclude.find(function (pte) {
-        return pte.id === p.id;
-      });
-      return !found;
-    });
-
-    ctrl.powers = angular.copy(filteredPowers);
-
-    ctrl.okEnabled = false;
-    ctrl.ok = function () {
-      var selectedPowers = ctrl.powers.filter(function (p) {
-        return p.selected;
-      });
-      $mdDialog.hide(selectedPowers);
-    };
-
-    ctrl.cancel = function () {
-      $mdDialog.cancel();
-    };
-
-    ctrl.selectPower = function (power, $event) {
-      power.selected = !power.selected;
-      ctrl.okEnabled = ctrl.powers.some(function (p) {
-        return p.selected;
-      });
-      $event.stopPropagation();
-    };
-  }]);
-})(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
-
-  ndnd.controller('rootCtrl', ['$rootScope', '$scope', '$mdSidenav', function ($rootScope, $scope, $mdSidenav) {
-
-    $scope.toggleSidenav = function () {
-      $mdSidenav('left').toggle();
-    };
-  }]);
-})(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
-
-  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
-
-    var ctrl = this;
-
-    ctrl.profile = null;
-    ctrl.heroes = [];
-    ctrl.addNewHero = addNewHero;
-
-    api.fetchProfile().then(function (data) {
-      return ctrl.profile = data;
-    });
-    api.fetchHeroes().then(function (data) {
-      return ctrl.heroes = data;
-    });
-
-    function addNewHero() {
-      $state.go('ndnd.newhero');
+    function openHint(source, id) {
+      hint.openHint(source, id);
     }
-  }]);
-})(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
-
-  ndnd.controller('addNewPerkCtrl', ['$mdDialog', 'perks', 'perksToExclude', function ($mdDialog, perks, perksToExclude) {
-
-    var ctrl = this;
-
-    // filter out perks used by the hero
-    var filteredPerks = perks.list.filter(function (p) {
-      var found = perksToExclude.find(function (pte) {
-        return pte.id === p.id;
-      });
-      return !found;
-    });
-
-    ctrl.perks = angular.copy(filteredPerks);
-
-    ctrl.okEnabled = false;
-    ctrl.ok = function () {
-      var selectedPerks = ctrl.perks.filter(function (p) {
-        return p.selected;
-      });
-      $mdDialog.hide(selectedPerks);
-    };
-
-    ctrl.cancel = function () {
-      $mdDialog.cancel();
-    };
-
-    ctrl.selectPerk = function (perk, $event) {
-      perk.selected = !perk.selected;
-      ctrl.okEnabled = ctrl.perks.some(function (p) {
-        return p.selected;
-      });
-      $event.stopPropagation();
-    };
   }]);
 })(angular.module('ndnd'));
 /*globals angular _*/
@@ -1216,6 +1301,56 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     ctrl.openHint = function (source, id) {
       hint.openHint(source, id);
+    };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('rootCtrl', ['$rootScope', '$scope', '$mdSidenav', function ($rootScope, $scope, $mdSidenav) {
+
+    $scope.toggleSidenav = function () {
+      $mdSidenav('left').toggle();
+    };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'powersToExclude', function ($mdDialog, powers, powersToExclude) {
+
+    var ctrl = this;
+
+    // filter out powers already selected
+    var filteredPowers = powers.list.filter(function (p) {
+      var found = powersToExclude.find(function (pte) {
+        return pte.id === p.id;
+      });
+      return !found;
+    });
+
+    ctrl.powers = angular.copy(filteredPowers);
+
+    console.log(ctrl.powers);
+
+    ctrl.okEnabled = false;
+    ctrl.ok = function () {
+      var selectedPowers = ctrl.powers.filter(function (p) {
+        return p.selected;
+      });
+      $mdDialog.hide(selectedPowers);
+    };
+
+    ctrl.cancel = function () {
+      $mdDialog.cancel();
+    };
+
+    ctrl.selectPower = function (power, $event) {
+      power.selected = !power.selected;
+      ctrl.okEnabled = ctrl.powers.some(function (p) {
+        return p.selected;
+      });
+      $event.stopPropagation();
     };
   }]);
 })(angular.module('ndnd'));

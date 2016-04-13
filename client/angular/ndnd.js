@@ -47,7 +47,13 @@
           },
           _skills: function(skills) {
             return skills.promise;
-          }
+          },
+          _energies: function(energies) {
+            return energies.promise;
+          },
+          _resources:function(resources) {
+            return resources.promise;
+          } 
         }
       });
 

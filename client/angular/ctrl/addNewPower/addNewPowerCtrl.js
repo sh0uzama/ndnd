@@ -14,6 +14,8 @@
       });
       
       ctrl.powers = angular.copy(filteredPowers);
+      
+      console.log(ctrl.powers);
 
       ctrl.okEnabled = false;
       ctrl.ok = function() {

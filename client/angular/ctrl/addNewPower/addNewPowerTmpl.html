@@ -37,13 +37,13 @@
         </div>
         <div class="card-line" ng-if="::power.requirements">
           <h5 class="card-line-title">Requirements</h5>
-          <p class="card-line-text" ng-bind-html="::power.requirements"></p>
+          <p class="card-line-text" compile="::power.requirements"></p>
         </div>
         <div class="card-line" ng-if="::power.target">
           <h5 class="card-line-title">Target(s)</h5>
           <p class="card-line-text">{{::power.target}}</p>
         </div>
-        <div class="card-full-text" ng-bind-html="::power.effect"></div>
+        <div class="card-full-text" compile="::power.effect"></div>
 
       </md-card-content>
     </md-card>

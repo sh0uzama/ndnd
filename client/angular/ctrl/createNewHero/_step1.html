@@ -1,6 +1,6 @@
 <form name="ctrl.step1Form" layout="column" flex>
 
-  <md-content layout="column" flex>
+  <md-content layout="column" flex class="padded-content">
     
     <md-input-container class="md-block">
       <label>Name</label>
@@ -29,6 +29,18 @@
           {{spec.name}}
         </md-option>
       </md-select>
+    </md-input-container>
+
+    <md-input-container class="md-block">
+      <label>Energy</label>
+      <md-select ng-model="ctrl.hero.energy" name="energy" required>
+        <md-option ng-repeat="energy in ctrl.resources.energies" value="{{energy.id}}">
+          {{energy.name}}
+        </md-option>
+      </md-select>
+      <div ng-messages="ctrl.step1Form.energy.$error">
+        <div ng-message="required">This is required.</div>
+      </div>
     </md-input-container>
     
   </md-content>
