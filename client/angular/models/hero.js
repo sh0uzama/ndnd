@@ -26,6 +26,8 @@
       };
       this.powers = [];
       this.perks = [];
+      this.armor = null;
+      this.weapons = [];
     }
   }
 

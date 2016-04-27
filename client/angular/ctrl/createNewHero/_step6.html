@@ -1,0 +1,37 @@
+<div layout="column" flex>
+
+  <md-content layout="column" flex class="padded-content">
+    
+    <md-input-container class="md-block" ng-repeat="">
+      <label>Armor</label>
+      <md-select ng-model="ctrl.hero.armor" name="primarySpec" required ng-change="ctrl.specChange(1)">
+        <md-option ng-repeat="spec in ctrl.resources.specializations" value="{{spec.id}}">
+          {{spec.name}}
+        </md-option>
+      </md-select>
+    </md-input-container>
+
+    <md-input-container class="md-block" ng-repeat="">
+      <label>Name</label>
+      <input md-maxlength="30" required name="name" ng-model="ctrl.hero.name">
+      <div ng-messages="ctrl.step1Form.name.$error">
+        <div ng-message="required">This is required.</div>
+      </div>
+    </md-input-container>
+
+
+  </md-content>
+
+</div>
+
+<md-toolbar>
+  <div class="md-toolbar-tools">
+    <md-button ng-click="ctrl.goToStep(4)">prev</md-button>
+    <span flex></span>
+    <md-button ng-click="ctrl.goToStep(6)">next</md-button>
+  </div>
+</md-toolbar>
+
+<md-button class="md-fab md-mini md-fab-bottom-right" style="margin-bottom: 45px;" aria-label="Add New Perk" ng-click="ctrl.chooseNewPerks()">
+  <md-icon>add</md-icon>
+</md-button>
