@@ -11,6 +11,7 @@
       var ctrl = this;
       var hero = new Models.Hero();
 
+      ctrl.currentStepTitle = null;
       ctrl.currentStepTemplate = null;
       ctrl.hero = hero;
 
@@ -22,12 +23,25 @@
       ctrl.removePower = removePower;
       ctrl.chooseNewPerks = chooseNewPerks;
       ctrl.removePerk = removePerk;
+      ctrl.removeWieldable = removeWieldable;
+      ctrl.addWieldable = addWieldable;
+      ctrl.getWieldableType = getWieldableType;
 
       ctrl.openHint = openHint;
 
       ctrl.resources = getResources();
 
-      goToStep(1);
+      var steps = [
+        'undetermined',
+        'Class and Energy',
+        'Attributes',
+        'Skills',
+        'Powers',
+        'Perks',
+        'Equipment'
+      ];
+
+      goToStep(6);
 
       function getResources() {
         return {
@@ -36,7 +50,8 @@
           skills: resources.skills.list,
           powers: resources.powers.list,
           perks: resources.perks.list,
-          energies: resources.energies.list
+          energies: resources.energies.list,
+          equipments: resources.equipments.list
         };
       }
 
@@ -55,6 +70,7 @@
 
       function goToStep(idx) {
         ctrl.currentStepTemplate = basePath + '_step' + idx + '.html';
+        ctrl.currentStepTitle = steps[idx];
       }
 
       function changeAttribute(id, amount) {
@@ -136,6 +152,27 @@
 
       function openHint(source, id) {
         hint.openHint(source, id);
+      }
+
+      function addWieldable() {
+        ctrl.hero.wieldables.push(null);
+      }
+
+      function removeWieldable($index) {
+        ctrl.hero.wieldables.splice($index, 1);
+      }
+
+      function getWieldableType($index) {
+        var id = ctrl.hero.wieldables[$index];
+        if (id) {
+          var item = resources.equipments.byId(id);
+          return '(' + item.type.charAt(0).toUpperCase() + item.type.slice(1) + ')';
+        }
+        return null;
+      }
+      
+      function confirm() {
+        
       }
 
     }
