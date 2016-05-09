@@ -5,8 +5,8 @@
 
   ndnd.controller('createNewHeroCtrl', [
 
-    '$timeout', 'api', 'resources', 'dialogService', 'hint',
-    function($timeout, api, resources, dialogService, hint) {
+    '$timeout', 'resources', 'dialogService', 'hint', 'heroes',
+    function($timeout, resources, dialogService, hint, heroes) {
 
       var ctrl = this;
       var hero = new Models.Hero();
@@ -26,6 +26,7 @@
       ctrl.removeWieldable = removeWieldable;
       ctrl.addWieldable = addWieldable;
       ctrl.getWieldableType = getWieldableType;
+      ctrl.confirm = confirm;
 
       ctrl.openHint = openHint;
 
@@ -41,7 +42,7 @@
         'Equipment'
       ];
 
-      goToStep(6);
+      goToStep(1);
 
       function getResources() {
         return {
@@ -162,17 +163,15 @@
         ctrl.hero.wieldables.splice($index, 1);
       }
 
-      function getWieldableType($index) {
-        var id = ctrl.hero.wieldables[$index];
-        if (id) {
-          var item = resources.equipments.byId(id);
-          return '(' + item.type.charAt(0).toUpperCase() + item.type.slice(1) + ')';
+      function getWieldableType(w) {
+        if (w) {
+          return '(' + w.type.charAt(0).toUpperCase() + w.type.slice(1) + ')';
         }
         return null;
       }
       
       function confirm() {
-        
+        heroes.save(ctrl.hero);
       }
 
     }

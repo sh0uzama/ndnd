@@ -51,9 +51,12 @@
           _energies: function(energies) {
             return energies.promise;
           },
-          _resources:function(resources) {
+          _resources: function(resources) {
             return resources.promise;
-          } 
+          },
+          _user: function(user) {
+            return user.promise;
+          }
         }
       });
 

@@ -4,6 +4,7 @@
 
   class Hero {
     constructor() {
+      this._id = null;
       this.name = null;
       this.primarySpec = null;
       this.secondarySpec = null;

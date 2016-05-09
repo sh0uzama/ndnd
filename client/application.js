@@ -39,6 +39,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
   var Hero = function Hero() {
     _classCallCheck(this, Hero);
 
+    this._id = null;
     this.name = null;
     this.primarySpec = null;
     this.secondarySpec = null;
@@ -140,6 +141,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         },
         _resources: function _resources(resources) {
           return resources.promise;
+        },
+        _user: function _user(user) {
+          return user.promise;
         }
       }
     });
@@ -247,6 +251,39 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function (ndnd) {
 
+  ndnd.factory('user', ['$http', '$q', function ($http, $q) {
+
+    var user = {
+      profile: null,
+      promise: null
+    };
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/profile',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        user.profile = result.data;
+        deferred.resolve(user);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    user.promise = initialize();
+
+    return user;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
   ndnd.factory('api', ['$q', '$http', function ($q, $http) {
 
     var _rootUrl = 'api';
@@ -265,11 +302,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: 'fetchProfile',
         value: function fetchProfile() {
           return _get('/profile');
-        }
-      }, {
-        key: 'fetchHeroes',
-        value: function fetchHeroes() {
-          return _get('/heroes');
         }
       }]);
 
@@ -459,6 +491,109 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       choosePowersDialog: choosePowersDialog,
       choosePerksDialog: choosePerksDialog
     };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular Models*/
+(function (ndnd) {
+
+  ndnd.factory('heroes', ['$q', '$http', 'user', 'resources', function ($q, $http, user, resources) {
+
+    var _rootUrl = 'api/heroes';
+
+    var Api = function () {
+      function Api() {
+        _classCallCheck(this, Api);
+      }
+
+      _createClass(Api, [{
+        key: 'fetch',
+        value: function fetch(id) {
+
+          if (id) {
+
+            return $http.get(_rootUrl + '/' + id).then(function (response) {
+              return toObject(response.data);
+            });
+          } else {
+
+            return $http.get(_rootUrl).then(function (response) {
+              if (response.data) {
+                return response.data.map(toObject);
+              }
+              return [];
+            });
+          }
+        }
+      }, {
+        key: 'save',
+        value: function save(hero) {
+
+          var model = toModel(hero);
+
+          if (hero._id) {
+
+            return $http.put(_rootUrl + '/' + hero._id, model).then(function (response) {
+              return response.data;
+            });
+          } else {
+
+            return $http.post(_rootUrl, model).then(function (response) {
+              return response.data;
+            });
+          }
+        }
+      }, {
+        key: 'remove',
+        value: function remove(id) {
+
+          return $http.delete(_rootUrl + '/' + id).then(function (response) {
+            return response.data;
+          });
+        }
+      }]);
+
+      return Api;
+    }();
+
+    function flattenArray(sourceArray) {
+      var fieldName = arguments.length <= 1 || arguments[1] === undefined ? "id" : arguments[1];
+
+      return sourceArray.map(function (item) {
+        return item[fieldName];
+      });
+    }
+
+    function inflateArray(sourceArray, resourceName) {
+      return sourceArray.map(function (item) {
+        return resources[resourceName].byId(item);
+      });
+    }
+
+    function toModel(hero) {
+
+      var model = angular.copy(hero);
+      model.userId = user.profile._id;
+      model.powers = flattenArray(hero.powers);
+      model.perks = flattenArray(hero.perks);
+      model.wieldables = flattenArray(hero.wieldables);
+      model.armor = hero.armor.id;
+      return model;
+    }
+
+    function toObject(model) {
+
+      var hero = new Models.Hero();
+      hero = angular.merge(hero, model);
+      hero.powers = inflateArray(model.powers, "powers");
+      hero.perks = inflateArray(model.perks, "perks");
+      hero.wieldables = inflateArray(model.wieldables, "equipments");
+      hero.armor = resources.equipments.byId(model.armor);
+      return hero;
+    }
+
+    var api = new Api();
+
+    return api;
   }]);
 })(angular.module('ndnd'));
 /*globals angular LZString _*/
@@ -689,7 +824,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var basePath = 'client/angular/ctrl/createNewHero/';
 
-  ndnd.controller('createNewHeroCtrl', ['$timeout', 'api', 'resources', 'dialogService', 'hint', function ($timeout, api, resources, dialogService, hint) {
+  ndnd.controller('createNewHeroCtrl', ['$timeout', 'resources', 'dialogService', 'hint', 'heroes', function ($timeout, resources, dialogService, hint, heroes) {
 
     var ctrl = this;
     var hero = new Models.Hero();
@@ -709,6 +844,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.removeWieldable = removeWieldable;
     ctrl.addWieldable = addWieldable;
     ctrl.getWieldableType = getWieldableType;
+    ctrl.confirm = confirm;
 
     ctrl.openHint = openHint;
 
@@ -716,7 +852,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var steps = ['undetermined', 'Class and Energy', 'Attributes', 'Skills', 'Powers', 'Perks', 'Equipment'];
 
-    goToStep(6);
+    goToStep(1);
 
     function getResources() {
       return {
@@ -828,36 +964,43 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       ctrl.hero.wieldables.splice($index, 1);
     }
 
-    function getWieldableType($index) {
-      var id = ctrl.hero.wieldables[$index];
-      if (id) {
-        var item = resources.equipments.byId(id);
-        return '(' + item.type.charAt(0).toUpperCase() + item.type.slice(1) + ')';
+    function getWieldableType(w) {
+      if (w) {
+        return '(' + w.type.charAt(0).toUpperCase() + w.type.slice(1) + ')';
       }
       return null;
+    }
+
+    function confirm() {
+      heroes.save(ctrl.hero);
     }
   }]);
 })(angular.module('ndnd'));
 /*globals angular */
 (function (ndnd) {
 
-  ndnd.controller('profileCtrl', ['$state', 'api', function ($state, api) {
+  ndnd.controller('profileCtrl', ['$state', 'user', 'heroes', function ($state, user, heroes) {
 
     var ctrl = this;
 
     ctrl.profile = null;
     ctrl.heroes = [];
     ctrl.addNewHero = addNewHero;
+    ctrl.profile = user.profile;
+    ctrl.select = select;
 
-    api.fetchProfile().then(function (data) {
-      return ctrl.profile = data;
-    });
-    api.fetchHeroes().then(function (data) {
+    heroes.fetch().then(function (data) {
       return ctrl.heroes = data;
     });
 
     function addNewHero() {
       $state.go('ndnd.newhero');
+    }
+
+    function select(id) {
+      heroes.fetch(id).then(function (hero) {
+        console.log(hero);
+      });
     }
   }]);
 })(angular.module('ndnd'));

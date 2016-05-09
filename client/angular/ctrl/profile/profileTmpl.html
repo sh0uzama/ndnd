@@ -20,12 +20,12 @@
 
     <h3 ng-if="!ctrl.heroes.length">You have no hero on this account</h3>
 
-    <md-list-item class="md-2-line" ng-repeat="hero in ctrl.heroes">
+    <md-list-item class="md-2-line" ng-repeat="hero in ctrl.heroes" ng-click="ctrl.select(hero._id)">
       <md-icon ng-if="!hero.avatar" class="md-avatar-icon">person</md-icon>
       <img ng-src="{{hero.avatar}}" class="md-avatar" alt="{{hero.name}}" ng-if="hero.avatar" />
       <div class="md-list-item-text">
         <h3> {{ hero.name }} </h3>
-        <p> {{ hero.primaryClass }}{{ hero.secondaryClass ? ' / ' + hero.secondaryClass : '' }} </p>
+        <p> {{ hero.primarySpec }}{{ hero.secondarySpec ? ' / ' + hero.secondarySpec : '' }} </p>
       </div>
       <md-button class="md-secondary md-icon-button" ng-click="ctrl.deleteHero(hero, $event)" aria-label="delete hero">
         <md-icon>delete</md-icon>

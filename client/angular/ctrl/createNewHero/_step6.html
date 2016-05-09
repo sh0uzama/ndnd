@@ -7,16 +7,16 @@
       <md-input-container class="md-block">
         <label>Armor</label>
         <md-select ng-model="ctrl.hero.armor" name="armor" required>
-          <md-option ng-repeat="equip in ctrl.resources.equipments | filter: { type: 'armor' }" value="{{equip.id}}">
+          <md-option ng-repeat="equip in ctrl.resources.equipments | filter: { type: 'armor' }" ng-value="equip">
             {{equip.name}}
           </md-option>
         </md-select>
       </md-input-container>
 
       <md-input-container class="md-block" ng-repeat="wieldable in ctrl.hero.wieldables track by $index">
-        <label>Item {{ctrl.getWieldableType($index)}}</label>
+        <label>Item {{ctrl.getWieldableType(wieldable)}}</label>
         <md-select ng-model="ctrl.hero.wieldables[$index]" required>
-          <md-option ng-repeat="equip in ctrl.resources.equipments | filter: { type: '!armor' }" value="{{equip.id}}">
+          <md-option ng-repeat="equip in ctrl.resources.equipments | filter: { type: '!armor' }" ng-value="equip">
             {{equip.name}}
           </md-option>
         </md-select>

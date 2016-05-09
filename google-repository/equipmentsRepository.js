@@ -8,7 +8,7 @@ var _equipments = [];
 
 Promise.all([
   read.section('weapons', 10),
-  read.section('armors', 2),
+  read.section('armors', 3),
   read.section('shields', 2)
 ]).then(function(res) {
   

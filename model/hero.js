@@ -9,6 +9,7 @@ var schema = mongoose.Schema({
   name: String,
   primarySpec: String,
   secondarySpec: String,
+  avatar: String,
   attributes: {
     strength: Number,
     agility: Number,
@@ -25,9 +26,10 @@ var schema = mongoose.Schema({
     thievery: Number,
     wits: Number
   },
-  avatar: String,
   powers: [String],
-  perks: [String]
+  perks: [String],
+  armor: String,
+  wieldables: [String]
 });
 // schema.plugin(uniqueValidator);
 

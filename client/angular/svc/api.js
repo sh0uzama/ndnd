@@ -21,10 +21,6 @@
           return _get('/profile');
         }
 
-        fetchHeroes() {
-          return _get('/heroes');
-        }
-
       }
 
       var api = new Api();
