@@ -113,6 +113,21 @@ body {
 .padded-content {
   padding: 8px;
 }
+.sidenav .sidenav-content .md-button {
+  border-radius: 0;
+  cursor: pointer;
+  display: block;
+  align-items: inherit;
+  line-height: 40px;
+  margin: 0;
+  max-height: 40px;
+  overflow: hidden;
+  padding: 0px 16px;
+  text-align: left;
+  text-decoration: none;
+  white-space: normal;
+  width: 100%;
+}
 .section-sheet .vanishing-fab.visible {
   transform: scale(1);
   transition: transform 0.3s linear;
