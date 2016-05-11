@@ -199,7 +199,7 @@ body {
   margin: 0;
   padding: 18px 8px;
 }
-.section-newhero .stat-number {
+.section-hero .stat-number {
   font-family: monospace;
   font-size: 24px;
   border-radius: 50%;
@@ -209,6 +209,6 @@ body {
   font-weight: 600;
   text-align: center;
 }
-.section-newhero .stat-untrained {
+.section-hero .stat-untrained {
   color: #B6B6B6;
 }

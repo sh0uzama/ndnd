@@ -10,6 +10,7 @@ var schema = mongoose.Schema({
   primarySpec: String,
   secondarySpec: String,
   avatar: String,
+  energy: String,
   attributes: {
     strength: Number,
     agility: Number,

@@ -164,12 +164,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       sectionClass: 'section-profile'
     });
 
-    $stateProvider.state('ndnd.newhero', {
-      url: 'newhero',
-      templateUrl: 'client/angular/ctrl/createNewHero/createNewHeroTmpl.html',
-      controller: 'createNewHeroCtrl',
+    $stateProvider.state('ndnd.hero', {
+      url: 'hero/:id',
+      templateUrl: 'client/angular/ctrl/hero/heroEditTmpl.html',
+      controller: 'heroEditCtrl',
       controllerAs: 'ctrl',
-      sectionClass: 'section-newhero'
+      sectionClass: 'section-hero'
     });
 
     $urlRouterProvider.otherwise('/profile');
@@ -533,12 +533,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (hero._id) {
 
             return $http.put(_rootUrl + '/' + hero._id, model).then(function (response) {
-              return response.data;
+              return toObject(response.data);
             });
           } else {
 
             return $http.post(_rootUrl, model).then(function (response) {
-              return response.data;
+              return toObject(response.data);
             });
           }
         }
@@ -547,7 +547,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function remove(id) {
 
           return $http.delete(_rootUrl + '/' + id).then(function (response) {
-            return response.data;
+            return toObject(response.data);
           });
         }
       }]);
@@ -779,52 +779,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
-
-  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'powersToExclude', function ($mdDialog, powers, powersToExclude) {
-
-    var ctrl = this;
-
-    // filter out powers already selected
-    var filteredPowers = powers.list.filter(function (p) {
-      var found = powersToExclude.find(function (pte) {
-        return pte.id === p.id;
-      });
-      return !found;
-    });
-
-    ctrl.powers = angular.copy(filteredPowers);
-
-    console.log(ctrl.powers);
-
-    ctrl.okEnabled = false;
-    ctrl.ok = function () {
-      var selectedPowers = ctrl.powers.filter(function (p) {
-        return p.selected;
-      });
-      $mdDialog.hide(selectedPowers);
-    };
-
-    ctrl.cancel = function () {
-      $mdDialog.cancel();
-    };
-
-    ctrl.selectPower = function (power, $event) {
-      power.selected = !power.selected;
-      ctrl.okEnabled = ctrl.powers.some(function (p) {
-        return p.selected;
-      });
-      $event.stopPropagation();
-    };
-  }]);
-})(angular.module('ndnd'));
 /*globals angular Models _ */
 (function (ndnd) {
 
-  var basePath = 'client/angular/ctrl/createNewHero/';
+  var basePath = 'client/angular/ctrl/hero/';
 
-  ndnd.controller('createNewHeroCtrl', ['$timeout', 'resources', 'dialogService', 'hint', 'heroes', function ($timeout, resources, dialogService, hint, heroes) {
+  ndnd.controller('heroEditCtrl', ['$timeout', '$stateParams', 'resources', 'dialogService', 'hint', 'heroes', function ($timeout, $stateParams, resources, dialogService, hint, heroes) {
 
     var ctrl = this;
     var hero = new Models.Hero();
@@ -851,6 +811,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.resources = getResources();
 
     var steps = ['undetermined', 'Class and Energy', 'Attributes', 'Skills', 'Powers', 'Perks', 'Equipment'];
+
+    if ($stateParams.id !== 'new') {
+      heroes.fetch($stateParams.id).then(function (h) {
+        ctrl.hero = h;
+      });
+    }
 
     goToStep(1);
 
@@ -979,29 +945,41 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular */
 (function (ndnd) {
 
-  ndnd.controller('profileCtrl', ['$state', 'user', 'heroes', function ($state, user, heroes) {
+  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'powersToExclude', function ($mdDialog, powers, powersToExclude) {
 
     var ctrl = this;
 
-    ctrl.profile = null;
-    ctrl.heroes = [];
-    ctrl.addNewHero = addNewHero;
-    ctrl.profile = user.profile;
-    ctrl.select = select;
-
-    heroes.fetch().then(function (data) {
-      return ctrl.heroes = data;
+    // filter out powers already selected
+    var filteredPowers = powers.list.filter(function (p) {
+      var found = powersToExclude.find(function (pte) {
+        return pte.id === p.id;
+      });
+      return !found;
     });
 
-    function addNewHero() {
-      $state.go('ndnd.newhero');
-    }
+    ctrl.powers = angular.copy(filteredPowers);
 
-    function select(id) {
-      heroes.fetch(id).then(function (hero) {
-        console.log(hero);
+    console.log(ctrl.powers);
+
+    ctrl.okEnabled = false;
+    ctrl.ok = function () {
+      var selectedPowers = ctrl.powers.filter(function (p) {
+        return p.selected;
       });
-    }
+      $mdDialog.hide(selectedPowers);
+    };
+
+    ctrl.cancel = function () {
+      $mdDialog.cancel();
+    };
+
+    ctrl.selectPower = function (power, $event) {
+      power.selected = !power.selected;
+      ctrl.okEnabled = ctrl.powers.some(function (p) {
+        return p.selected;
+      });
+      $event.stopPropagation();
+    };
   }]);
 })(angular.module('ndnd'));
 /*globals angular */
@@ -1522,5 +1500,50 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     specializations.promise = initialize();
 
     return specializations;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('profileCtrl', ['$state', '$mdDialog', 'user', 'heroes', function ($state, $mdDialog, user, heroes) {
+
+    var ctrl = this;
+
+    ctrl.profile = null;
+    ctrl.heroes = [];
+    ctrl.addNewHero = addNewHero;
+    ctrl.profile = user.profile;
+    ctrl.select = selectHero;
+    ctrl.delete = deleteHero;
+
+    loadHeroes();
+
+    function loadHeroes() {
+      heroes.fetch().then(function (data) {
+        return ctrl.heroes = data;
+      });
+    }
+
+    function addNewHero() {
+      $state.go('ndnd.hero', { id: 'new' });
+    }
+
+    function selectHero(id) {
+      $state.go('ndnd.hero', { id: id });
+    }
+
+    function deleteHero($index, $event) {
+
+      var hero = ctrl.heroes[$index];
+
+      var confirm = $mdDialog.confirm().title('Please confirm').textContent('Would you like to delete ' + hero.name + '?').ariaLabel('Confirm delete').targetEvent($event).ok('Please do it!').cancel('I changed my mind');
+
+      $mdDialog.show(confirm).then(function () {
+
+        heroes.remove(hero._id).then(function () {
+          ctrl.heroes.splice($index, 1);
+        });
+      });
+    }
   }]);
 })(angular.module('ndnd'));

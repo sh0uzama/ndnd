@@ -1,12 +1,12 @@
 /*globals angular Models _ */
 (function(ndnd) {
 
-  const basePath = 'client/angular/ctrl/createNewHero/';
+  const basePath = 'client/angular/ctrl/hero/';
 
-  ndnd.controller('createNewHeroCtrl', [
+  ndnd.controller('heroEditCtrl', [
 
-    '$timeout', 'resources', 'dialogService', 'hint', 'heroes',
-    function($timeout, resources, dialogService, hint, heroes) {
+    '$timeout', '$stateParams', 'resources', 'dialogService', 'hint', 'heroes',
+    function($timeout, $stateParams, resources, dialogService, hint, heroes) {
 
       var ctrl = this;
       var hero = new Models.Hero();
@@ -41,6 +41,12 @@
         'Perks',
         'Equipment'
       ];
+
+      if ($stateParams.id !== 'new') {
+        heroes.fetch($stateParams.id).then(function(h) {
+          ctrl.hero = h;
+        });
+      }
 
       goToStep(1);
 

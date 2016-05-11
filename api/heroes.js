@@ -5,6 +5,8 @@ var router = express.Router();
 
 router.get('/', function(req, res) {
 
+  console.log('fetching heroes for user:', req.user._id);
+
   Hero.find({
 
     userId: req.user._id
@@ -12,72 +14,113 @@ router.get('/', function(req, res) {
   }, function(err, heroes) {
 
     if (err) {
-      return console.error(err);
+      console.error(err);
+      return res.status(500).end();
     }
 
-    res.json(heroes);
+    res.status(200).json(heroes);
 
   });
 
 });
 
 router.get('/:id', function(req, res) {
-  
-  Hero.findById(req.params.id, function (err, hero) {
-    
+
+  console.log('fetching hero:', req.params.id, 'for user:', req.user._id);
+
+  Hero.findById(req.params.id, function(err, hero) {
+
     if (err) {
-      return console.error(err);
+      console.error(err);
+      return res.status(500).end();
     }
-    
-    res.json(hero);
-    
+
+    if (!hero) {
+      return res.status(404).end();
+    }
+
+    if (String(hero.userId) != String(req.user._id)) {
+      return res.status(403).end();
+    }
+
+    res.status(200).json(hero);
+
   });
-  
+
 });
 
 router.post('/', function(req, res) {
 
+  console.log('creating hero for user:', req.user._id);
+
   var hero = new Hero(req.body);
+  hero.userId = req.user._id;
+
   hero.save(function(err) {
 
     if (err) {
-      return console.error(err);
+      console.error(err);
+      return res.status(500).end();
     }
 
-    res.json(hero);
-    
+    res.status(200).json(hero);
+
   });
 });
 
-router.put('/:id', function(req,res) {
-  
+router.put('/:id', function(req, res) {
+
+  console.log('updating hero:', req.params.id, 'for user:', req.user._id);
+
   var updatedModel = req.body;
   delete updatedModel._id;
-  
-  Hero.findByIdAndUpdate(req.params.id, updatedModel, function(err, hero) {
+
+  var query = {
+    _id: req.params.id,
+    userId: req.user._id
+  };
+
+  Hero.findOneAndUpdate(query, updatedModel, function(err, hero) {
 
     if (err) {
-      return console.error(err);
+      console.error(err);
+      return res.status(500).end();
     }
 
-    res.json(hero);
-    
+    if (!hero) {
+      return res.status(404).end();
+    }
+
+    res.status(200).json(hero);
+
   });
-  
+
 });
 
-router.delete('/:id', function(req,res) {
+router.delete('/:id', function(req, res) {
+
+  console.log('deleting hero:', req.params.id, 'for user:', req.user._id);
+
+  var query = {
+    _id: req.params.id,
+    userId: req.user._id
+  };
   
-  Hero.findByIdAndRemove(req.params.id, function(err, hero) {
+  Hero.findOneAndRemove(query, function(err, hero) {
 
     if (err) {
-      return console.error(err);
+      console.error(err);
+      return res.status(500).end();
     }
 
-    res.json(hero);
-    
+    if (!hero) {
+      return res.status(404).end();
+    }
+
+    res.status(200).json(hero);
+
   });
-  
+
 });
 
 module.exports = router;

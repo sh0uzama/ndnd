@@ -76,15 +76,16 @@
         sectionClass: 'section-profile'
       });
 
-      $stateProvider.state('ndnd.newhero', {
-        url: 'newhero',
-        templateUrl: 'client/angular/ctrl/createNewHero/createNewHeroTmpl.html',
-        controller: 'createNewHeroCtrl',
+      $stateProvider.state('ndnd.hero', {
+        url: 'hero/:id',
+        templateUrl: 'client/angular/ctrl/hero/heroEditTmpl.html',
+        controller: 'heroEditCtrl',
         controllerAs: 'ctrl',
-        sectionClass: 'section-newhero'
+        sectionClass: 'section-hero'
       });
 
       $urlRouterProvider.otherwise('/profile');
+      
     }
   ]);
 

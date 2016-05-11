@@ -41,14 +41,14 @@
           if (hero._id) {
             
             return $http.put(_rootUrl + '/' + hero._id, model).then(function(response) {
-              return response.data;
+              return toObject(response.data);
             });
             
           }
           else {
             
             return $http.post(_rootUrl, model).then(function(response) {
-              return response.data;
+              return toObject(response.data);
             });
             
           }
@@ -59,7 +59,7 @@
         remove(id) {
 
           return $http.delete(_rootUrl + '/' + id).then(function(response) {
-            return response.data;
+            return toObject(response.data);
           });
 
         }
