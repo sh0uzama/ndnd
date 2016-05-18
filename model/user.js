@@ -14,8 +14,7 @@ var schema = mongoose.Schema({
   },
   password: String,
   email: {
-    type: String,
-    unique: true
+    type: String
   },
   googleId: {
     type: String,

@@ -27,7 +27,7 @@
         <h3> {{ hero.name }} </h3>
         <p> {{ hero.primarySpec }}{{ hero.secondarySpec ? ' / ' + hero.secondarySpec : '' }} </p>
       </div>
-      <md-button class="md-secondary md-icon-button" ng-click="ctrl.deleteHero($index, $event)" aria-label="delete hero">
+      <md-button class="md-secondary md-icon-button" ng-click="ctrl.delete($index, $event)" aria-label="delete hero">
         <md-icon>delete</md-icon>
       </md-button>
     </md-list-item>

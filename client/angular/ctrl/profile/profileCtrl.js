@@ -38,8 +38,8 @@
           .textContent(`Would you like to delete ${hero.name}?`)
           .ariaLabel('Confirm delete')
           .targetEvent($event)
-          .ok('Please do it!')
-          .cancel('I changed my mind');
+          .ok('Yeah')
+          .cancel('Nope');
         
         $mdDialog.show(confirm).then(function() {
 

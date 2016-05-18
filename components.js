@@ -1,8 +1,8 @@
 const cdnjs = "//cdnjs.cloudflare.com/ajax/libs"
 
 const versions = {
-  angular: "/angular.js/1.5.3",
-  angularMaterial: "/angular-material/1.0.7"
+  angular: "/angular.js/1.5.5",
+  angularMaterial: "/angular-material/1.0.8"
 };
 
 var jsList = [
@@ -25,8 +25,8 @@ var jsList = [
   //LZ-STRING
   cdnjs + '/lz-string/1.4.4/lz-string.min.js',
   //ANGULAR SCHEMA FORM
-  cdnjs + '/angular-schema-form/0.8.13/schema-form.min.js',
-  cdnjs + '/angular-schema-form/0.8.13/bootstrap-decorator.min.js'
+  //cdnjs + '/angular-schema-form/0.8.13/schema-form.min.js',
+  //cdnjs + '/angular-schema-form/0.8.13/bootstrap-decorator.min.js'
 ];
 
 var fontList = [

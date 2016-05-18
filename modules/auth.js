@@ -49,13 +49,14 @@ var googleStrat = new GoogleStrategy(
       else {
         user = new User();
         user.username = profile.displayName;
+        user.displayname = profile.displayName;
         user.googleId = profile.id;
         if (profile.photos[0]) {
           user.avatar = profile.photos[0].value;
         }
         user.save(function(err) {
           if (err) {
-            console.log(err);
+            console.log(err, user);
             throw err;
           }
           return done(null, user);

@@ -82,6 +82,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 }
 
 */
+(function () {
+
+  window.Models = window.Models || {};
+
+  var Sheet = function Sheet() {
+    _classCallCheck(this, Sheet);
+
+    this._id = null;
+    this.hero = null;
+    this.wounds = 0;
+    this.permanentWounds = 0;
+    this.armor = 0;
+    this.movement = 4;
+    this.energy = 0;
+    this.inTurn = false;
+    this.hasInstant = false;
+    this.effects = {};
+  };
+
+  window.Models.Sheet = Sheet;
+})();
 /*globals angular*/
 (function () {
   var ndndLogin = angular.module('ndndLogin', ['ngMaterial']);
@@ -452,6 +473,111 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
+/*globals angular Models*/
+(function (ndnd) {
+
+  ndnd.factory('charsheets', ['$q', '$http', 'user', 'resources', 'heroes', function ($q, $http, user, resources, heroes) {
+
+    var _rootUrl = 'api/charsheets';
+
+    var Api = function () {
+      function Api() {
+        _classCallCheck(this, Api);
+      }
+
+      _createClass(Api, [{
+        key: 'fetch',
+        value: function fetch(id) {
+
+          if (id) {
+
+            return $http.get(_rootUrl + '/' + id).then(function (response) {
+              return _toObject(response.data);
+            });
+          } else {
+
+            return $http.get(_rootUrl).then(function (response) {
+              if (response.data) {
+                return response.data.map(_toObject);
+              }
+              return [];
+            });
+          }
+        }
+      }, {
+        key: 'save',
+        value: function save(obj) {
+
+          var model = _toModel(obj);
+
+          if (obj._id) {
+
+            return $http.put(_rootUrl + '/' + obj._id, model).then(function (response) {
+              return _toObject(response.data);
+            });
+          } else {
+
+            return $http.post(_rootUrl, model).then(function (response) {
+              return _toObject(response.data);
+            });
+          }
+        }
+      }, {
+        key: 'remove',
+        value: function remove(id) {
+
+          return $http.delete(_rootUrl + '/' + id).then(function (response) {
+            return _toObject(response.data);
+          });
+        }
+      }, {
+        key: 'toModel',
+        value: function toModel(sheet) {
+          return _toModel(sheet);
+        }
+      }, {
+        key: 'toObject',
+        value: function toObject(sheet) {
+          return _toObject(sheet);
+        }
+      }]);
+
+      return Api;
+    }();
+
+    function flattenArray(sourceArray) {
+      var fieldName = arguments.length <= 1 || arguments[1] === undefined ? "id" : arguments[1];
+
+      return sourceArray.map(function (item) {
+        return item[fieldName];
+      });
+    }
+
+    function inflateArray(sourceArray, resourceName) {
+      return sourceArray.map(function (item) {
+        return resources[resourceName].byId(item);
+      });
+    }
+
+    function _toModel(sheet) {
+
+      var model = angular.copy(sheet);
+      model.userId = user.profile._id;
+      return model;
+    }
+
+    function _toObject(model) {
+
+      var sheet = new Models.Sheet();
+      sheet = angular.merge(sheet, model);
+      return sheet;
+    }
+
+    var api = new Api();
+
+    return api;
+  }]);
+})(angular.module('ndnd'));
 /*globals angular */
 (function (ndnd) {
 
@@ -512,13 +638,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (id) {
 
             return $http.get(_rootUrl + '/' + id).then(function (response) {
-              return toObject(response.data);
+              return _toObject2(response.data);
             });
           } else {
 
             return $http.get(_rootUrl).then(function (response) {
               if (response.data) {
-                return response.data.map(toObject);
+                return response.data.map(_toObject2);
               }
               return [];
             });
@@ -528,17 +654,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: 'save',
         value: function save(hero) {
 
-          var model = toModel(hero);
+          var model = _toModel2(hero);
 
           if (hero._id) {
 
             return $http.put(_rootUrl + '/' + hero._id, model).then(function (response) {
-              return toObject(response.data);
+              return _toObject2(response.data);
             });
           } else {
 
             return $http.post(_rootUrl, model).then(function (response) {
-              return toObject(response.data);
+              return _toObject2(response.data);
             });
           }
         }
@@ -547,8 +673,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function remove(id) {
 
           return $http.delete(_rootUrl + '/' + id).then(function (response) {
-            return toObject(response.data);
+            return _toObject2(response.data);
           });
+        }
+      }, {
+        key: 'toModel',
+        value: function toModel(hero) {
+          return _toModel2(hero);
+        }
+      }, {
+        key: 'toObject',
+        value: function toObject(model) {
+          return _toObject2(model);
         }
       }]);
 
@@ -569,7 +705,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     }
 
-    function toModel(hero) {
+    function _toModel2(hero) {
 
       var model = angular.copy(hero);
       model.userId = user.profile._id;
@@ -580,7 +716,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return model;
     }
 
-    function toObject(model) {
+    function _toObject2(model) {
 
       var hero = new Models.Hero();
       hero = angular.merge(hero, model);
@@ -592,7 +728,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     var api = new Api();
-
     return api;
   }]);
 })(angular.module('ndnd'));
@@ -773,6 +908,46 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.selectPerk = function (perk, $event) {
       perk.selected = !perk.selected;
       ctrl.okEnabled = ctrl.perks.some(function (p) {
+        return p.selected;
+      });
+      $event.stopPropagation();
+    };
+  }]);
+})(angular.module('ndnd'));
+/*globals angular */
+(function (ndnd) {
+
+  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'powersToExclude', function ($mdDialog, powers, powersToExclude) {
+
+    var ctrl = this;
+
+    // filter out powers already selected
+    var filteredPowers = powers.list.filter(function (p) {
+      var found = powersToExclude.find(function (pte) {
+        return pte.id === p.id;
+      });
+      return !found;
+    });
+
+    ctrl.powers = angular.copy(filteredPowers);
+
+    console.log(ctrl.powers);
+
+    ctrl.okEnabled = false;
+    ctrl.ok = function () {
+      var selectedPowers = ctrl.powers.filter(function (p) {
+        return p.selected;
+      });
+      $mdDialog.hide(selectedPowers);
+    };
+
+    ctrl.cancel = function () {
+      $mdDialog.cancel();
+    };
+
+    ctrl.selectPower = function (power, $event) {
+      power.selected = !power.selected;
+      ctrl.okEnabled = ctrl.powers.some(function (p) {
         return p.selected;
       });
       $event.stopPropagation();
@@ -976,7 +1151,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       var hero = ctrl.heroes[$index];
 
-      var confirm = $mdDialog.confirm().title('Please confirm').textContent('Would you like to delete ' + hero.name + '?').ariaLabel('Confirm delete').targetEvent($event).ok('Please do it!').cancel('I changed my mind');
+      var confirm = $mdDialog.confirm().title('Please confirm').textContent('Would you like to delete ' + hero.name + '?').ariaLabel('Confirm delete').targetEvent($event).ok('Yeah').cancel('Nope');
 
       $mdDialog.show(confirm).then(function () {
 
@@ -985,46 +1160,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
       });
     }
-  }]);
-})(angular.module('ndnd'));
-/*globals angular */
-(function (ndnd) {
-
-  ndnd.controller('addNewPowerCtrl', ['$mdDialog', 'powers', 'powersToExclude', function ($mdDialog, powers, powersToExclude) {
-
-    var ctrl = this;
-
-    // filter out powers already selected
-    var filteredPowers = powers.list.filter(function (p) {
-      var found = powersToExclude.find(function (pte) {
-        return pte.id === p.id;
-      });
-      return !found;
-    });
-
-    ctrl.powers = angular.copy(filteredPowers);
-
-    console.log(ctrl.powers);
-
-    ctrl.okEnabled = false;
-    ctrl.ok = function () {
-      var selectedPowers = ctrl.powers.filter(function (p) {
-        return p.selected;
-      });
-      $mdDialog.hide(selectedPowers);
-    };
-
-    ctrl.cancel = function () {
-      $mdDialog.cancel();
-    };
-
-    ctrl.selectPower = function (power, $event) {
-      power.selected = !power.selected;
-      ctrl.okEnabled = ctrl.powers.some(function (p) {
-        return p.selected;
-      });
-      $event.stopPropagation();
-    };
   }]);
 })(angular.module('ndnd'));
 /*globals angular */

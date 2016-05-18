@@ -127,6 +127,7 @@ body {
   text-decoration: none;
   white-space: normal;
   width: 100%;
+  font-weight: 600;
 }
 .section-sheet .vanishing-fab.visible {
   transform: scale(1);
