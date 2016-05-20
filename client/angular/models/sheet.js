@@ -6,6 +6,7 @@
     constructor() {
       this._id = null;
       this.heroId = null;
+      this.name = null;
       this.wounds = 0;
       this.permanentWounds = 0;
       this.armor = 0;

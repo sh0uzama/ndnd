@@ -5,12 +5,13 @@
 
   ndnd.controller('heroEditCtrl', [
 
-    '$timeout', '$stateParams', 'resources', 'dialogService', 'hint', 'heroes',
-    function($timeout, $stateParams, resources, dialogService, hint, heroes) {
+    '$timeout', '$state', '$stateParams', 'resources', 'dialogService', 'hint', 'heroes',
+    function($timeout, $state, $stateParams, resources, dialogService, hint, heroes) {
 
       var ctrl = this;
       var hero = new Models.Hero();
-
+      var currentStep = 0;
+      
       ctrl.currentStepTitle = null;
       ctrl.currentStepTemplate = null;
       ctrl.hero = hero;
@@ -27,6 +28,7 @@
       ctrl.addWieldable = addWieldable;
       ctrl.getWieldableType = getWieldableType;
       ctrl.confirm = confirm;
+      ctrl.back = back;
 
       ctrl.openHint = openHint;
 
@@ -75,7 +77,19 @@
 
       }
 
+      function back(idx) {
+        currentStep--;
+        if (currentStep <= 0) {
+          $state.go('ndnd.profile');
+        }
+        else
+        {
+          goToStep(currentStep);
+        }
+      }
+
       function goToStep(idx) {
+        currentStep = idx;
         ctrl.currentStepTemplate = basePath + '_step' + idx + '.html';
         ctrl.currentStepTitle = steps[idx];
       }

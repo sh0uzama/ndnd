@@ -90,7 +90,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     _classCallCheck(this, Sheet);
 
     this._id = null;
-    this.hero = null;
+    this.heroId = null;
+    this.name = null;
     this.wounds = 0;
     this.permanentWounds = 0;
     this.armor = 0;
@@ -228,79 +229,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     };
   });
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('resources', ['$q', 'attributes', 'effects', 'energies', 'equipments', 'perks', 'powers', 'skills', 'specializations', function ($q, attributes, effects, energies, equipments, perks, powers, skills, specializations) {
-
-    var promises = [attributes.promise, effects.promise, energies.promise, equipments.promise, perks.promise, powers.promise, skills.promise, specializations.promise];
-
-    var resources = {
-
-      attributes: null,
-      effects: null,
-      energies: null,
-      equipments: null,
-      perks: null,
-      powers: null,
-      skills: null,
-      specializations: null,
-
-      promise: null
-
-    };
-
-    function initialize() {
-      return $q.all(promises).then(function () {
-        resources.attributes = attributes;
-        resources.effects = effects;
-        resources.energies = energies;
-        resources.equipments = equipments;
-        resources.perks = perks;
-        resources.powers = powers;
-        resources.skills = skills;
-        resources.specializations = specializations;
-      });
-    }
-
-    resources.promise = initialize();
-
-    return resources;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('user', ['$http', '$q', function ($http, $q) {
-
-    var user = {
-      profile: null,
-      promise: null
-    };
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/profile',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        user.profile = result.data;
-        deferred.resolve(user);
-      }, deferred.reject);
-
-      return deferred.promise;
-    }
-
-    user.promise = initialize();
-
-    return user;
-  }]);
 })(angular.module('ndnd'));
 /*globals angular*/
 (function (ndnd) {
@@ -476,7 +404,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular Models*/
 (function (ndnd) {
 
-  ndnd.factory('charsheets', ['$q', '$http', 'user', 'resources', 'heroes', function ($q, $http, user, resources, heroes) {
+  ndnd.factory('charsheets', ['$q', '$http', 'user', 'resources', function ($q, $http, user, resources) {
 
     var _rootUrl = 'api/charsheets';
 
@@ -876,6 +804,79 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('resources', ['$q', 'attributes', 'effects', 'energies', 'equipments', 'perks', 'powers', 'skills', 'specializations', function ($q, attributes, effects, energies, equipments, perks, powers, skills, specializations) {
+
+    var promises = [attributes.promise, effects.promise, energies.promise, equipments.promise, perks.promise, powers.promise, skills.promise, specializations.promise];
+
+    var resources = {
+
+      attributes: null,
+      effects: null,
+      energies: null,
+      equipments: null,
+      perks: null,
+      powers: null,
+      skills: null,
+      specializations: null,
+
+      promise: null
+
+    };
+
+    function initialize() {
+      return $q.all(promises).then(function () {
+        resources.attributes = attributes;
+        resources.effects = effects;
+        resources.energies = energies;
+        resources.equipments = equipments;
+        resources.perks = perks;
+        resources.powers = powers;
+        resources.skills = skills;
+        resources.specializations = specializations;
+      });
+    }
+
+    resources.promise = initialize();
+
+    return resources;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('user', ['$http', '$q', function ($http, $q) {
+
+    var user = {
+      profile: null,
+      promise: null
+    };
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/profile',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        user.profile = result.data;
+        deferred.resolve(user);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    user.promise = initialize();
+
+    return user;
+  }]);
+})(angular.module('ndnd'));
 /*globals angular */
 (function (ndnd) {
 
@@ -959,10 +960,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
   var basePath = 'client/angular/ctrl/hero/';
 
-  ndnd.controller('heroEditCtrl', ['$timeout', '$stateParams', 'resources', 'dialogService', 'hint', 'heroes', function ($timeout, $stateParams, resources, dialogService, hint, heroes) {
+  ndnd.controller('heroEditCtrl', ['$timeout', '$state', '$stateParams', 'resources', 'dialogService', 'hint', 'heroes', function ($timeout, $state, $stateParams, resources, dialogService, hint, heroes) {
 
     var ctrl = this;
     var hero = new Models.Hero();
+    var currentStep = 0;
 
     ctrl.currentStepTitle = null;
     ctrl.currentStepTemplate = null;
@@ -980,6 +982,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     ctrl.addWieldable = addWieldable;
     ctrl.getWieldableType = getWieldableType;
     ctrl.confirm = confirm;
+    ctrl.back = back;
 
     ctrl.openHint = openHint;
 
@@ -1019,7 +1022,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
     }
 
+    function back(idx) {
+      currentStep--;
+      if (currentStep <= 0) {
+        $state.go('ndnd.profile');
+      } else {
+        goToStep(currentStep);
+      }
+    }
+
     function goToStep(idx) {
+      currentStep = idx;
       ctrl.currentStepTemplate = basePath + '_step' + idx + '.html';
       ctrl.currentStepTitle = steps[idx];
     }
@@ -1124,12 +1137,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     var ctrl = this;
 
-    ctrl.profile = null;
     ctrl.heroes = [];
-    ctrl.addNewHero = addNewHero;
+    ctrl.selectedHero = null;
     ctrl.profile = user.profile;
-    ctrl.select = selectHero;
-    ctrl.delete = deleteHero;
+
+    ctrl.createHero = createHero;
+    ctrl.selectHero = selectHero;
+    ctrl.deleteHero = deleteHero;
+    ctrl.editHero = editHero;
+
+    ctrl.createSheet = createSheet;
+    ctrl.selectSheet = selectSheet;
 
     loadHeroes();
 
@@ -1139,17 +1157,23 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     }
 
-    function addNewHero() {
+    function createHero() {
       $state.go('ndnd.hero', { id: 'new' });
     }
 
-    function selectHero(id) {
-      $state.go('ndnd.hero', { id: id });
+    function selectHero(hero) {
+      ctrl.selectedHero = hero;
     }
 
-    function deleteHero($index, $event) {
+    function editHero(hero) {
+      $state.go('ndnd.hero', { id: hero._id });
+    }
 
-      var hero = ctrl.heroes[$index];
+    function deleteHero(hero, $event) {
+
+      var $index = ctrl.heroes.findIndex(function (h) {
+        return h._id === hero._id;
+      });
 
       var confirm = $mdDialog.confirm().title('Please confirm').textContent('Would you like to delete ' + hero.name + '?').ariaLabel('Confirm delete').targetEvent($event).ok('Yeah').cancel('Nope');
 
@@ -1160,6 +1184,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         });
       });
     }
+
+    function selectSheet() {}
+
+    function createSheet() {}
   }]);
 })(angular.module('ndnd'));
 /*globals angular */

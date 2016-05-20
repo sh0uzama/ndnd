@@ -8,12 +8,17 @@
 
       var ctrl = this;
 
-      ctrl.profile = null;
       ctrl.heroes = [];
-      ctrl.addNewHero = addNewHero;
+      ctrl.selectedHero = null;
       ctrl.profile = user.profile;
-      ctrl.select = selectHero;
-      ctrl.delete = deleteHero;
+      
+      ctrl.createHero = createHero;
+      ctrl.selectHero = selectHero;
+      ctrl.deleteHero = deleteHero;
+      ctrl.editHero = editHero;
+      
+      ctrl.createSheet = createSheet;
+      ctrl.selectSheet = selectSheet;
       
       loadHeroes();
       
@@ -21,17 +26,21 @@
         heroes.fetch().then(data => ctrl.heroes = data);
       }
 
-      function addNewHero() {
+      function createHero() {
         $state.go('ndnd.hero', { id: 'new' });
       }
       
-      function selectHero(id) {
-        $state.go('ndnd.hero', { id: id });
+      function selectHero(hero) {
+        ctrl.selectedHero = hero;
       }
       
-      function deleteHero($index, $event) {
+      function editHero(hero) {
+        $state.go('ndnd.hero', { id: hero._id });
+      }
+      
+      function deleteHero(hero, $event) {
         
-        var hero = ctrl.heroes[$index];
+        var $index = ctrl.heroes.findIndex(h => h._id === hero._id);
         
         var confirm = $mdDialog.confirm()
           .title('Please confirm')
@@ -48,6 +57,14 @@
           });
           
         });
+        
+      }
+      
+      function selectSheet() {
+        
+      }
+      
+      function createSheet() {
         
       }
 

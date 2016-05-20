@@ -8,6 +8,7 @@ var objectName = "Sheet";
 var schema = mongoose.Schema({
   userId: ObjectId,
   heroId: ObjectId,
+  name: String,
   wounds: Number,
   permanentWounds: Number,
   armor: Number,

@@ -3,7 +3,7 @@
   </div>
 </md-toolbar>
 
-<md-content layout="column" flex>
+<md-content layout="column" flex ng-hide="ctrl.selectedHero">
 
   <div layout="row" layout-padding class="profile-header">
     <img ng-src="{{ctrl.profile.avatar}}" width="50" height="50" class="profile-avatar" />
@@ -20,14 +20,56 @@
 
     <h3 ng-if="!ctrl.heroes.length">You have no hero on this account</h3>
 
-    <md-list-item class="md-2-line" ng-repeat="hero in ctrl.heroes" ng-click="ctrl.select(hero._id)">
+    <md-list-item class="md-2-line" ng-repeat="hero in ctrl.heroes" ng-click="ctrl.selectHero(hero)">
       <md-icon ng-if="!hero.avatar" class="md-avatar-icon">person</md-icon>
       <img ng-src="{{hero.avatar}}" class="md-avatar" alt="{{hero.name}}" ng-if="hero.avatar" />
       <div class="md-list-item-text">
         <h3> {{ hero.name }} </h3>
         <p> {{ hero.primarySpec }}{{ hero.secondarySpec ? ' / ' + hero.secondarySpec : '' }} </p>
       </div>
-      <md-button class="md-secondary md-icon-button" ng-click="ctrl.delete($index, $event)" aria-label="delete hero">
+    </md-list-item>
+    </md-list>
+
+  </div>
+
+  <md-button class="md-fab md-mini md-fab-bottom-right" aria-label="add new hero" ng-click="ctrl.createHero()">
+    <md-icon>person_add</md-icon>
+  </md-button>
+
+</md-content>
+
+<md-content layout="column" flex ng-if="ctrl.selectedHero">
+
+  <div layout="row" layout-padding class="profile-header">
+    <img ng-if="ctrl.selectedHero.avatar" 
+         ng-src="{{ctrl.selectedHero.avatar}}" 
+         width="50" height="50" 
+         class="profile-avatar" />
+    <md-icon ng-if="!ctrl.selectedHero.avatar" class="md-avatar-icon profile-avatar">person</md-icon>
+    <h2 class="profile-username">{{ctrl.selectedHero.name}}</h2>
+  </div>
+
+  <md-toolbar layout="row" class="md-hue-3">
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" ng-click="ctrl.editHero(ctrl.selectedHero)">
+        <md-icon>mode_edit</md-icon>
+      </md-button>
+      <md-button class="md-icon-button" ng-click="ctrl.deleteHero(ctrl.selectedHero, $event)">
+        <md-icon>delete</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+
+  <div layout="column" layout-padding class="profile-characters">
+
+    <h3 ng-if="!ctrl.sheets.length">This hero has no sheets created.</h3>
+
+    <md-list-item class="md-2-line" ng-repeat="sheet in ctrl.sheets" ng-click="ctrl.selectSheet(sheet)">
+      <md-icon class="md-avatar-icon">insert_drive_file</md-icon>
+      <div class="md-list-item-text">
+        <h3> {{ sheet.name }} </h3>
+      </div>
+      <md-button class="md-secondary md-icon-button" ng-click="ctrl.deleteSheet(sheet, $index, $event)" aria-label="delete hero">
         <md-icon>delete</md-icon>
       </md-button>
     </md-list-item>
@@ -35,8 +77,8 @@
 
   </div>
 
-  <md-button class="md-fab md-mini md-fab-bottom-right" aria-label="add new hero" ng-click="ctrl.addNewHero()">
-    <md-icon>person_add</md-icon>
+  <md-button class="md-fab md-mini md-fab-bottom-right" aria-label="add new sheet" ng-click="ctrl.createSheet()">
+    <md-icon>note_add</md-icon>
   </md-button>
 
 </md-content>
