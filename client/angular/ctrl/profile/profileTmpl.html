@@ -46,16 +46,20 @@
          width="50" height="50" 
          class="profile-avatar" />
     <md-icon ng-if="!ctrl.selectedHero.avatar" class="md-avatar-icon profile-avatar">person</md-icon>
-    <h2 class="profile-username">{{ctrl.selectedHero.name}}</h2>
+    <h2 class="profile-username" flex>{{ctrl.selectedHero.name}}</h2>
   </div>
 
   <md-toolbar layout="row" class="md-hue-3">
     <div class="md-toolbar-tools">
-      <md-button class="md-icon-button" ng-click="ctrl.editHero(ctrl.selectedHero)">
-        <md-icon>mode_edit</md-icon>
+      <md-button class="md-icon-button" ng-click="ctrl.deselectHero()">
+        <md-icon>arrow_back</md-icon>
       </md-button>
-      <md-button class="md-icon-button" ng-click="ctrl.deleteHero(ctrl.selectedHero, $event)">
-        <md-icon>delete</md-icon>
+      <span flex></span>
+      <md-button class="md-primary md-raised" ng-click="ctrl.editHero(ctrl.selectedHero)">
+        Edit Hero
+      </md-button>
+      <md-button class="md-warn md-raised" ng-click="ctrl.deleteHero(ctrl.selectedHero, $event)">
+        Delete Hero
       </md-button>
     </div>
   </md-toolbar>

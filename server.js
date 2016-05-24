@@ -58,6 +58,7 @@ app.use('/api/effects', require('./api/effects'));
 app.use('/api/equipments', require('./api/equipments'));
 app.use('/api/profile', require('./api/profile'));
 app.use('/api/heroes', require('./api/heroes'));
+app.use('/api/sheets', require('./api/sheets'));
 
 // AUTH ENDPOINTS CONFIGURATION
 app.use('/auth', require('./modules/auth'));

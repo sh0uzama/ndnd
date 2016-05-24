@@ -1,14 +1,36 @@
 var express = require('express');
-var Sheet = require('../model/sheets');
+var Sheet = require('../model/sheet');
 
 var router = express.Router();
 
+// ALL SHEET BY USER
 router.get('/', function(req, res) {
 
   console.log('fetching sheets for user:', req.user._id);
 
   Sheet.find({
     userId: req.user._id
+  }, function(err, sheets) {
+
+    if (err) {
+      console.error(err);
+      return res.status(500).end();
+    }
+
+    res.status(200).json(sheets);
+
+  });
+
+});
+
+// ALL SHEET BY USER AND HERO
+router.get('/hero/:id', function(req, res) {
+
+  console.log('fetching sheets for user:', req.user._id, 'and hero:', req.params.id);
+
+  Sheet.find({
+    userId: req.user._id,
+    heroId: req.params.id
   }, function(err, sheets) {
 
     if (err) {

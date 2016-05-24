@@ -3,6 +3,7 @@
   window.Models = window.Models || {};
 
   class Sheet {
+    
     constructor() {
       this._id = null;
       this.heroId = null;
@@ -16,6 +17,7 @@
       this.hasInstant = false;
       this.effects = {};
     }
+
   }
 
   window.Models.Sheet = Sheet;

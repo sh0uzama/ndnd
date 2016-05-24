@@ -233,6 +233,79 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular*/
 (function (ndnd) {
 
+  ndnd.factory('resources', ['$q', 'attributes', 'effects', 'energies', 'equipments', 'perks', 'powers', 'skills', 'specializations', function ($q, attributes, effects, energies, equipments, perks, powers, skills, specializations) {
+
+    var promises = [attributes.promise, effects.promise, energies.promise, equipments.promise, perks.promise, powers.promise, skills.promise, specializations.promise];
+
+    var resources = {
+
+      attributes: null,
+      effects: null,
+      energies: null,
+      equipments: null,
+      perks: null,
+      powers: null,
+      skills: null,
+      specializations: null,
+
+      promise: null
+
+    };
+
+    function initialize() {
+      return $q.all(promises).then(function () {
+        resources.attributes = attributes;
+        resources.effects = effects;
+        resources.energies = energies;
+        resources.equipments = equipments;
+        resources.perks = perks;
+        resources.powers = powers;
+        resources.skills = skills;
+        resources.specializations = specializations;
+      });
+    }
+
+    resources.promise = initialize();
+
+    return resources;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
+  ndnd.factory('user', ['$http', '$q', function ($http, $q) {
+
+    var user = {
+      profile: null,
+      promise: null
+    };
+
+    function initialize() {
+
+      var deferred = $q.defer();
+
+      var req = {
+        url: 'api/profile',
+        method: 'GET'
+      };
+
+      $http(req).then(function (result) {
+
+        user.profile = result.data;
+        deferred.resolve(user);
+      }, deferred.reject);
+
+      return deferred.promise;
+    }
+
+    user.promise = initialize();
+
+    return user;
+  }]);
+})(angular.module('ndnd'));
+/*globals angular*/
+(function (ndnd) {
+
   ndnd.factory('api', ['$q', '$http', function ($q, $http) {
 
     var _rootUrl = 'api';
@@ -401,111 +474,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
-/*globals angular Models*/
-(function (ndnd) {
-
-  ndnd.factory('charsheets', ['$q', '$http', 'user', 'resources', function ($q, $http, user, resources) {
-
-    var _rootUrl = 'api/charsheets';
-
-    var Api = function () {
-      function Api() {
-        _classCallCheck(this, Api);
-      }
-
-      _createClass(Api, [{
-        key: 'fetch',
-        value: function fetch(id) {
-
-          if (id) {
-
-            return $http.get(_rootUrl + '/' + id).then(function (response) {
-              return _toObject(response.data);
-            });
-          } else {
-
-            return $http.get(_rootUrl).then(function (response) {
-              if (response.data) {
-                return response.data.map(_toObject);
-              }
-              return [];
-            });
-          }
-        }
-      }, {
-        key: 'save',
-        value: function save(obj) {
-
-          var model = _toModel(obj);
-
-          if (obj._id) {
-
-            return $http.put(_rootUrl + '/' + obj._id, model).then(function (response) {
-              return _toObject(response.data);
-            });
-          } else {
-
-            return $http.post(_rootUrl, model).then(function (response) {
-              return _toObject(response.data);
-            });
-          }
-        }
-      }, {
-        key: 'remove',
-        value: function remove(id) {
-
-          return $http.delete(_rootUrl + '/' + id).then(function (response) {
-            return _toObject(response.data);
-          });
-        }
-      }, {
-        key: 'toModel',
-        value: function toModel(sheet) {
-          return _toModel(sheet);
-        }
-      }, {
-        key: 'toObject',
-        value: function toObject(sheet) {
-          return _toObject(sheet);
-        }
-      }]);
-
-      return Api;
-    }();
-
-    function flattenArray(sourceArray) {
-      var fieldName = arguments.length <= 1 || arguments[1] === undefined ? "id" : arguments[1];
-
-      return sourceArray.map(function (item) {
-        return item[fieldName];
-      });
-    }
-
-    function inflateArray(sourceArray, resourceName) {
-      return sourceArray.map(function (item) {
-        return resources[resourceName].byId(item);
-      });
-    }
-
-    function _toModel(sheet) {
-
-      var model = angular.copy(sheet);
-      model.userId = user.profile._id;
-      return model;
-    }
-
-    function _toObject(model) {
-
-      var sheet = new Models.Sheet();
-      sheet = angular.merge(sheet, model);
-      return sheet;
-    }
-
-    var api = new Api();
-
-    return api;
-  }]);
-})(angular.module('ndnd'));
 /*globals angular */
 (function (ndnd) {
 
@@ -566,13 +534,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           if (id) {
 
             return $http.get(_rootUrl + '/' + id).then(function (response) {
-              return _toObject2(response.data);
+              return _toObject(response.data);
             });
           } else {
 
             return $http.get(_rootUrl).then(function (response) {
               if (response.data) {
-                return response.data.map(_toObject2);
+                return response.data.map(_toObject);
               }
               return [];
             });
@@ -582,17 +550,17 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: 'save',
         value: function save(hero) {
 
-          var model = _toModel2(hero);
+          var model = _toModel(hero);
 
           if (hero._id) {
 
             return $http.put(_rootUrl + '/' + hero._id, model).then(function (response) {
-              return _toObject2(response.data);
+              return _toObject(response.data);
             });
           } else {
 
             return $http.post(_rootUrl, model).then(function (response) {
-              return _toObject2(response.data);
+              return _toObject(response.data);
             });
           }
         }
@@ -601,18 +569,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function remove(id) {
 
           return $http.delete(_rootUrl + '/' + id).then(function (response) {
-            return _toObject2(response.data);
+            return _toObject(response.data);
           });
         }
       }, {
         key: 'toModel',
         value: function toModel(hero) {
-          return _toModel2(hero);
+          return _toModel(hero);
         }
       }, {
         key: 'toObject',
         value: function toObject(model) {
-          return _toObject2(model);
+          return _toObject(model);
         }
       }]);
 
@@ -633,7 +601,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       });
     }
 
-    function _toModel2(hero) {
+    function _toModel(hero) {
 
       var model = angular.copy(hero);
       model.userId = user.profile._id;
@@ -644,7 +612,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return model;
     }
 
-    function _toObject2(model) {
+    function _toObject(model) {
 
       var hero = new Models.Hero();
       hero = angular.merge(hero, model);
@@ -804,77 +772,118 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     };
   }]);
 })(angular.module('ndnd'));
-/*globals angular*/
+/*globals angular Models*/
 (function (ndnd) {
 
-  ndnd.factory('resources', ['$q', 'attributes', 'effects', 'energies', 'equipments', 'perks', 'powers', 'skills', 'specializations', function ($q, attributes, effects, energies, equipments, perks, powers, skills, specializations) {
+  ndnd.factory('sheets', ['$q', '$http', 'user', 'resources', function ($q, $http, user, resources) {
 
-    var promises = [attributes.promise, effects.promise, energies.promise, equipments.promise, perks.promise, powers.promise, skills.promise, specializations.promise];
+    var _rootUrl = 'api/sheets';
 
-    var resources = {
+    var Api = function () {
+      function Api() {
+        _classCallCheck(this, Api);
+      }
 
-      attributes: null,
-      effects: null,
-      energies: null,
-      equipments: null,
-      perks: null,
-      powers: null,
-      skills: null,
-      specializations: null,
+      _createClass(Api, [{
+        key: 'fetch',
+        value: function fetch(id) {
 
-      promise: null
+          if (id) {
 
-    };
+            return $http.get(_rootUrl + '/' + id).then(function (response) {
+              return _toObject2(response.data);
+            });
+          } else {
 
-    function initialize() {
-      return $q.all(promises).then(function () {
-        resources.attributes = attributes;
-        resources.effects = effects;
-        resources.energies = energies;
-        resources.equipments = equipments;
-        resources.perks = perks;
-        resources.powers = powers;
-        resources.skills = skills;
-        resources.specializations = specializations;
-      });
+            return $http.get(_rootUrl).then(function (response) {
+              if (response.data) {
+                return response.data.map(_toObject2);
+              }
+              return [];
+            });
+          }
+        }
+      }, {
+        key: 'fetchByHero',
+        value: function fetchByHero(heroId) {
+
+          return $http.get(_rootUrl + '/hero/' + heroId).then(function (response) {
+            if (response.data) {
+              return response.data.map(_toObject2);
+            }
+            return [];
+          });
+        }
+      }, {
+        key: 'save',
+        value: function save(obj) {
+
+          var model = _toModel2(obj);
+
+          if (obj._id) {
+
+            return $http.put(_rootUrl + '/' + obj._id, model).then(function (response) {
+              return _toObject2(response.data);
+            });
+          } else {
+
+            return $http.post(_rootUrl, model).then(function (response) {
+              return _toObject2(response.data);
+            });
+          }
+        }
+      }, {
+        key: 'remove',
+        value: function remove(id) {
+
+          return $http.delete(_rootUrl + '/' + id).then(function (response) {
+            return _toObject2(response.data);
+          });
+        }
+      }, {
+        key: 'toModel',
+        value: function toModel(sheet) {
+          return _toModel2(sheet);
+        }
+      }, {
+        key: 'toObject',
+        value: function toObject(sheet) {
+          return _toObject2(sheet);
+        }
+      }, {
+        key: 'createNewFromHero',
+        value: function createNewFromHero(hero) {
+
+          var sheet = new Models.Sheet();
+
+          sheet.heroId = hero._id;
+          sheet.name = hero.name + " - sheet";
+          sheet.wounds = 12 + hero.attributes.strength + hero.attributes.toughness * 2;
+
+          return sheet;
+        }
+      }]);
+
+      return Api;
+    }();
+
+    function _toModel2(sheet) {
+
+      var model = angular.copy(sheet);
+      model.userId = user.profile._id;
+      return model;
     }
 
-    resources.promise = initialize();
+    function _toObject2(model) {
 
-    return resources;
-  }]);
-})(angular.module('ndnd'));
-/*globals angular*/
-(function (ndnd) {
-
-  ndnd.factory('user', ['$http', '$q', function ($http, $q) {
-
-    var user = {
-      profile: null,
-      promise: null
-    };
-
-    function initialize() {
-
-      var deferred = $q.defer();
-
-      var req = {
-        url: 'api/profile',
-        method: 'GET'
-      };
-
-      $http(req).then(function (result) {
-
-        user.profile = result.data;
-        deferred.resolve(user);
-      }, deferred.reject);
-
-      return deferred.promise;
+      var sheet = new Models.Sheet();
+      sheet = angular.merge(sheet, model);
+      return sheet;
     }
 
-    user.promise = initialize();
+    var api = new Api();
 
-    return user;
+    return api;
   }]);
 })(angular.module('ndnd'));
 /*globals angular */
@@ -1133,7 +1142,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /*globals angular */
 (function (ndnd) {
 
-  ndnd.controller('profileCtrl', ['$state', '$mdDialog', 'user', 'heroes', function ($state, $mdDialog, user, heroes) {
+  ndnd.controller('profileCtrl', ['$state', '$mdDialog', 'user', 'heroes', 'sheets', function ($state, $mdDialog, user, heroes, sheets) {
 
     var ctrl = this;
 
@@ -1143,6 +1152,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     ctrl.createHero = createHero;
     ctrl.selectHero = selectHero;
+    ctrl.deselectHero = deselectHero;
     ctrl.deleteHero = deleteHero;
     ctrl.editHero = editHero;
 
@@ -1158,15 +1168,24 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     }
 
     function createHero() {
-      $state.go('ndnd.hero', { id: 'new' });
+      $state.go('ndnd.hero', {
+        id: 'new'
+      });
     }
 
     function selectHero(hero) {
       ctrl.selectedHero = hero;
+      loadSheets(hero._id);
+    }
+
+    function deselectHero() {
+      ctrl.selectedHero = null;
     }
 
     function editHero(hero) {
-      $state.go('ndnd.hero', { id: hero._id });
+      $state.go('ndnd.hero', {
+        id: hero._id
+      });
     }
 
     function deleteHero(hero, $event) {
@@ -1179,9 +1198,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
       $mdDialog.show(confirm).then(function () {
 
+        ctrl.selectedHero = null;
+
         heroes.remove(hero._id).then(function () {
           ctrl.heroes.splice($index, 1);
         });
+      });
+    }
+
+    function loadSheets(heroId) {
+      ctrl.sheets = [];
+      sheets.fetchByHero(heroId).then(function (data) {
+        return ctrl.sheets = data;
       });
     }
 
